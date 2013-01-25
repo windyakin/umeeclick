@@ -16,8 +16,6 @@ use CGI::Carp qw(fatalsToBrowser); #debug
 use lib './lib';
 use JSON;
 
-print "Content-type: text/plain\n\n";
-
 # CGIの実行結果を終了コードとする
 exit(main());
 
@@ -51,7 +49,7 @@ sub main
 		$_ = <CNT>; # ファイルの1行目を取得(というか1行目にしか書かれてないし…)
 		flock( CNT, 8 ); # ロック解除
 		
-		# データを読み込む
+		# 既存データを読み込む
 		$data  = decode_json($_);
 		# トータルカウント値を加算
 		$total = ++$data->{total};
@@ -77,6 +75,7 @@ sub main
 	
 	# 結果を出力
 	{
+		print "Content-type: text/plain\n\n";
 		print $result;
 	}
 	
@@ -96,13 +95,13 @@ sub judgeKiriban
 	my $count = shift;
 	
 	# ファイルを開く
-	open ( KIRI, '<', './kiriban.txt') || die 'Cannot read kiriban.txt';
-	
-	# キリ番を読み込む
-	while ( <KIRI> ) {
-		chomp;
-		if ( $count eq $_ ) {
-			return 1;
+	if ( open ( KIRI, '<', './kiriban.txt') ) {
+		# キリ番を読み込む
+		while ( <KIRI> ) {
+			chomp;
+			if ( $count eq $_ ) {
+				return 1; # キリ番であれば1を返す
+			}
 		}
 	}
 	

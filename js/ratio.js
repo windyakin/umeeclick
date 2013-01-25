@@ -1,6 +1,4 @@
 $(function(){
-	// 初期始動
-	keepRatio();
 	// ウインドウサイズが変更されたら相対を取り直す
 	$(window).resize(keepRatio);
 });
