@@ -1,4 +1,14 @@
 #!/usr/bin/perl
+#====================================================================================================
+#
+#	カウント集計用CGI
+#	c.cgi
+#
+#	ブース番号をつけてアクセスすることで，カウントを集計します。
+#
+#	使用例 : /c.cgi?[BoothNum]
+#
+#====================================================================================================
 
 use strict;
 use warnings;
@@ -8,82 +18,93 @@ use JSON;
 
 print "Content-type: text/plain\n\n";
 
-my $count  = 0;
-my $booth  = sprintf("%02d", $ARGV[0]);
-my $data   = JSON->new->allow_nonref;
-my $result = 0;
+# CGIの実行結果を終了コードとする
+exit(main());
 
-# debug start
-if ( $ARGV[0] !~ /^\d+$/ ) {
-	if ( $ARGV[0] eq "v" ) {
-		open( CNT, "< ./count.json" ) || die 'Cannot read count.txt';
-		print while (<CNT>);
-		close( CNT );
-	}
-	elsif ( $ARGV[0] =~ /^s(\d+)$/ ) {
-		open( CNT, "+< ./count.json" ) || die 'Cannot wittern count.txt';
-		flock( CNT, 1 ); # 読み込みロック
-		$_ = <CNT>;
-		flock( CNT, 8 ); # ロック解除
-		
-		$data  = decode_json($_);
-		$data->{count} = $1+0;
-		flock( CNT, 2 ); # 書き込みロック
-		
-		seek( CNT, 0, 0 );
-		print CNT encode_json($data);
-		truncate( CNT, tell(CNT) );
-		print $data->{count};
-		close( CNT );    # クローズと同時にロック解除するはず
-	}
-	elsif ( $ARGV[0] eq "r" ) {
-	}
-	else {
+sub main
+{
+	my $total  = 0;
+	my $booth  = sprintf("%02d", $ARGV[0]);
+	my $data   = JSON->new->allow_nonref;
+	my $result = 0;
+	
+	# debug start
+	if ( $ARGV[0] !~ /^\d+$/ ) {
 		print 'c.cgi - (c)2012 windyakin.'."\n";
-		print 'アクセス毎にカウントし，キリ番かどうかを返します。'."\n";
+		print 'ブース番号をつけてアクセスすることで，カウントを集計します。'."\n";
 		print "\n";
 		print 'Syntax: /c.cgi?[ BoothNum ]'."\n";
 		print 'BoothNum'."\t".'事前に定められたブース番号です'."\n";
 		print 'Return: [RoundNumFlag(0 or 1)][EOF]'."\n";
 		print "\n";
 		print '[補足]'."\n";
-		print '現在のカウント値は /c.cgi?v で見ることができます。'."\n";
-		print 'カウント値のセットは /c.cgi?s[ SetNum ] で設定できます。';
+		print '現在のカウント値は /count.json に保存されています。'."\n";
+		print 'カウントのリセットは /c.cgi?r できるようにします(予定)。';
+		exit;
 	}
-	exit;
-}
-# debug end
-
-# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
-if ( open( CNT, "+< ./count.json" ) )
-{
-	flock( CNT, 1 ); # 読み込みロック
-	$_ = <CNT>;
-	flock( CNT, 8 ); # ロック解除
+	# debug end
 	
-	$data  = decode_json($_);
-	$count = ++$data->{count};
-	$data->{booth} = $booth;
-	$data->{stati}->{$booth}++;
-	
-	# キリ番の時に情報を書き込む
-	if ( ( $count / 100 <= 18 && $count % 100 == 0 ) ) {
-		$data->{kiriban}->{count} = $count;
-		$data->{kiriban}->{booth} = $booth;
-		$result = 1;
+	# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
+	if ( open( CNT, "+< ./count.json" ) )
+	{
+		flock( CNT, 1 ); # 読み込みロック
+		$_ = <CNT>; # ファイルの1行目を取得(というか1行目にしか書かれてないし…)
+		flock( CNT, 8 ); # ロック解除
+		
+		# データを読み込む
+		$data  = decode_json($_);
+		# トータルカウント値を加算
+		$total = ++$data->{total};
+		# ブース情報を書き込み
+		$data->{booth} = $booth;
+		# ブースごとのカウント値を加算
+		$data->{stati}->{$booth}++;
+		
+		# キリ番の時に情報を書き込む
+		if ( judgeKiriban($total) ) {
+			$data->{kiriban}->{count} = $total;
+			$data->{kiriban}->{booth} = $booth;
+			$result = 1;
+		}
+		
+		flock( CNT, 2 ); # 書き込みロック
+		seek( CNT, 0, 0 ); # 先頭
+		print CNT encode_json($data); # データの書き出し
+		truncate( CNT, tell(CNT) ); # 削る(知らなかった…)
+		
+		close( CNT ); # クローズと同時にロック解除するはず
 	}
 	
-	flock( CNT, 2 ); # 書き込みロック
+	# 結果を出力
+	{
+		print $result;
+	}
 	
-	seek( CNT, 0, 0 );
-	print CNT encode_json($data);
-	truncate( CNT, tell(CNT) );
-	
-	close( CNT );    # クローズと同時にロック解除するはず
+	return $result;
 }
 
+#------------------------------------------------------------------------------------------------------------
+#
+#	キリ番判定関数
+#	-------------------------------------------
+#	@param	$count		カウント値
+#	@return	キリ番であれば1,キリ番でなければ0
+#
+#------------------------------------------------------------------------------------------------------------
+sub judgeKiriban
 {
-	print $result;
+	my $count = shift;
+	
+	# ファイルを開く
+	open ( KIRI, '<', './kiriban.txt') || die 'Cannot read kiriban.txt';
+	
+	# キリ番を読み込む
+	while ( <KIRI> ) {
+		chomp;
+		if ( $count eq $_ ) {
+			return 1;
+		}
+	}
+	
+	return 0;
 }
-
-exit;
