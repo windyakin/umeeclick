@@ -72,8 +72,7 @@ var now = {
 		time : 0,	// キリ番イベントが発生した時間
 	},
 };
-// キリ番
-var kiriban = 0;
+var lastbooth = 0;
 
 function getCountLoop()
 {
@@ -101,17 +100,18 @@ function getCountLoop()
 					}
 					// 通常のアニメーション
 					else if ( now.total < data.total ) {
-						normalAnimation( data.total, data.booth );
+						if ( lastbooth != data.booth ) {
+							animateNormal( data.total, data.booth );
+						}
+						else {
+							animateCountup( data.total );
+						}
 					}
-				}
-				// アニメーション中であればカウント値のみ増やす
-				else {
-					$("#count").text(data.total);
 				}
 			}
 			now = data;
 		},
-		
+		// 通信が完了したら１秒後に自分自身を呼び出す
 		complete: function () {
 			setTimeout(getCountLoop, 1000);
 		}
@@ -119,7 +119,7 @@ function getCountLoop()
 	});
 }
 
-function normalAnimation( count, booth )
+function animateNormal( count, booth )
 {
 	// ブース番号が存在しなければ何も実行しない
 	if (!products[booth]) return;
@@ -162,7 +162,7 @@ function normalAnimation( count, booth )
 		.delay(500)
 		// キャラ出現アニメーション
 		.queue( function (next) {
-			$("#baloon").transition({opacity:1.0, rotate:-15}, 400);
+			$("#baloon").transition({ opacity: 1.0, rotate: -15 }, 400);
 			$("#character").transition({ opacity: 1.0 }, 800);
 			next();
 		})
@@ -189,8 +189,8 @@ function normalAnimation( count, booth )
 		})
 		// キャラ消失アニメーション
 		.queue( function (next) {
-			$("#character").transition({opacity:0}, 700);
-			$("#baloon").transition({opacity:0}, 700).transition({rotate:0},0);
+			$("#character").transition({ opacity: 0 }, 700);
+			$("#baloon").transition({ opacity: 0 }, 700).transition({ rotate: 0 },0);
 			next();
 		})
 		.delay(700)
@@ -198,8 +198,8 @@ function normalAnimation( count, booth )
 		// カウンター表示
 		.queue( function (next) {
 			$("#count").text(now.total);
-			$("#countbox").transition({opacity:1}, 500, 'ease');
-			$("#telop").transition({opacity:1}, 500, 'ease');
+			$("#countbox").transition({ opacity: 1 }, 500, 'ease');
+			$("#telop").transition({ opacity: 1 }, 500, 'ease');
 			next();
 		})
 		.delay(500)
@@ -207,10 +207,25 @@ function normalAnimation( count, booth )
 		// 次のアニメーションへ
 		.queue( function (next) {
 			aFlag = 0;
+			lastbooth = booth;
 			next();
 		});
 	
 }
+
+function animateCountup( count )
+{
+	$("div#countbox")
+		.queue( function (next) {
+			$(this).transition( { opacity: 0 }, 500, 'ease');
+			next();
+		})
+		.delay(500)
+		.queue( function (next) {
+			$("div#count").text(count);
+			$(this).transition( { opacity: 1 }, 500, 'ease' );
+			next();
+		})}
 
 function getSize( dom )
 {
