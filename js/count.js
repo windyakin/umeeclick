@@ -72,6 +72,7 @@ var now = {
 		time : 0,	// キリ番イベントが発生した時間
 	},
 };
+// 最後にアニメーションを行ったブースの記憶用
 var lastbooth = 0;
 
 function getCountLoop()
@@ -90,19 +91,19 @@ function getCountLoop()
 			}
 			// カウント値が増加
 			if ( data.total > now.total ) {
-				// キリ番アニメーション
-				console.log(now.kiriban);
 				// アニメーション中でなければうめぇな～！
 				if ( aFlag == 0 ) {
 					// キリ番のアニメーション
 					if ( now.kiriban.time < data.kiriban.time ) {
-						console.log("キリ番イベント発生");
+						animateKiriban( kiriban );
 					}
 					// 通常のアニメーション
 					else if ( now.total < data.total ) {
+						// 最後にアニメーションしたブースと一緒でなければ通常のアニメーション
 						if ( lastbooth != data.booth ) {
 							animateNormal( data.total, data.booth );
 						}
+						// 最後にアニメーションしたブースと一緒であればカウントアップのみ
 						else {
 							animateCountup( data.total );
 						}
@@ -204,7 +205,7 @@ function animateNormal( count, booth )
 		})
 		.delay(500)
 		
-		// 次のアニメーションへ
+		// おわり
 		.queue( function (next) {
 			aFlag = 0;
 			lastbooth = booth;
@@ -225,7 +226,13 @@ function animateCountup( count )
 			$("div#count").text(count);
 			$(this).transition( { opacity: 1 }, 500, 'ease' );
 			next();
-		})}
+		});
+	
+}
+
+function animateKiriban( count, booth )
+{
+}
 
 function getSize( dom )
 {
