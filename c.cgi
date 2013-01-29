@@ -52,16 +52,17 @@ sub main
 		# 既存データを読み込む
 		$data  = decode_json($_);
 		# トータルカウント値を加算
-		$total = ++$data->{total};
+		$total = ++$data->{'total'};
 		# ブース情報を書き込み
-		$data->{booth} = $booth;
+		$data->{'booth'} = $booth;
 		# ブースごとのカウント値を加算
-		$data->{stati}->{$booth}++;
+		$data->{'stati'}->{$booth}++;
 		
 		# キリ番の時に情報を書き込む
 		if ( judgeKiriban($total) ) {
-			$data->{kiriban}->{count} = $total;
-			$data->{kiriban}->{booth} = $booth;
+			$data->{'kiriban'}->{'count'}  = $total;
+			$data->{'kiriban'}->{'booth'}  = $booth;
+			$data->{'kiriban'}->{'time'} = time; 
 			$result = 1;
 		}
 		

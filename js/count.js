@@ -41,7 +41,7 @@ products["16"] = new Product("./img/product/16.png", "./se/16.ogg");	// どら�
 products["17"] = new Product("./img/product/17.png", "./se/17.ogg");	// 雄町米おかき
 
 // キリ番音声
-var eventsound = new Audio("se/event.ogg");
+var eventsound = new Audio("./se/event.ogg");
 eventsound.load();
 
 // jQuery的処理はここから
@@ -57,12 +57,25 @@ $(function () {
 	// 読み込んだ画像のリサイズ・再配置
 	keepRatio(); // ratio.js
 	
+	getCountLoop();
+	
 });
 
 // アニメーションフラグ
-aFlag = 0;
-// 現在のカウント値
-total = -1;
+var aFlag = 0;
+// 現在のカウントデータ
+var now = {
+	total: -1,		// カウント合計値
+	booth: 0,		// ブース番号
+	
+	kiriban: {		// 最終キリ番の設定データ
+		count: 0,	// キリ番の値
+		booth: 0,	// ブース番号
+		time : 0,	// キリ番イベントが発生した時間
+	},
+};
+// キリ番
+var kiriban = 0;
 
 function getCountLoop()
 {
@@ -73,11 +86,36 @@ function getCountLoop()
 		cache: false, //キャッシュさせない
 		
 		success: function (data) {
-			
+			// 初回起動時はとにかく現在のカウント値を取得
+			if ( now.total == -1 ) {
+				now = data;
+				$("#count").text(now.total);
+			}
+			// カウント値が増加
+			if ( data.total > now.total ) {
+				// キリ番アニメーション
+				console.log(now.kiriban);
+				// アニメーション中でなければうめぇな～！
+				if ( aFlag == 0 ) {
+					// キリ番のアニメーション
+					if ( now.kiriban.time < data.kiriban.time ) {
+						console.log("キリ番イベント発生");
+					}
+					// 通常のアニメーション
+					else if ( now.total < data.total ) {
+						console.log("増えた！");
+					}
+				}
+				else {
+					
+				}
+				$("#count").text(data.total);
+			}
+			now = data;
 		},
 		
 		complete: function () {
-			
+			setTimeout(getCountLoop, 5000);
 		}
 		
 	});
