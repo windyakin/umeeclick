@@ -66,19 +66,18 @@ total = -1;
 
 function getCountLoop()
 {
-	// 現在時刻
-	var time = (new Date).getTime();
-	
 	$.ajax({
 		
 		dataType: "json",
-		url: "./count.json?"+time,
+		url: "./count.json",
+		cache: false, //キャッシュさせない
 		
 		success: function (data) {
 			
 		},
 		
 		complete: function () {
+			
 		}
 		
 	});
