@@ -20,15 +20,15 @@ var Product = function(imageurl, soundurl) {
 
 // 商品ごとの画像と音声の設定
 var products = {};
-products[1]  = new Product("./img/product/1.png",  "./se/01.ogg");		// 泡々酒ストライプ
-products[2]  = new Product("./img/product/2.png",  "./se/02.ogg");		// おかやま米野菜
-products[3]  = new Product("./img/product/3.png",  "./se/03.ogg");		// 津山ビール
-products[4]  = new Product("./img/product/4.png",  "./se/04.ogg");		// SOYPORK
-products[5]  = new Product("./img/product/5.png",  "./se/05.ogg");		// 醍醐桜ジャージー牛乳
-products[6]  = new Product("./img/product/6.png",  "./se/06.ogg");		// 踊る！たこ焼き器
-products[7]  = new Product("./img/product/7.png",  "./se/07.ogg");		// 姫とうがらし藁綯い
-products[8]  = new Product("./img/product/8.png",  "./se/08.ogg");		// 黒々炒り豆
-products[9]  = new Product("./img/product/9.png",  "./se/09.ogg");		// FOODACTION美作
+products[1]  = new Product("./img/product/1.png",  "./se/01.ogg");	// 泡々酒ストライプ
+products[2]  = new Product("./img/product/2.png",  "./se/02.ogg");	// おかやま米野菜
+products[3]  = new Product("./img/product/3.png",  "./se/03.ogg");	// 津山ビール
+products[4]  = new Product("./img/product/4.png",  "./se/04.ogg");	// SOYPORK
+products[5]  = new Product("./img/product/5.png",  "./se/05.ogg");	// 醍醐桜ジャージー牛乳
+products[6]  = new Product("./img/product/6.png",  "./se/06.ogg");	// 踊る！たこ焼き器
+products[7]  = new Product("./img/product/7.png",  "./se/07.ogg");	// 姫とうがらし藁綯い
+products[8]  = new Product("./img/product/8.png",  "./se/08.ogg");	// 黒々炒り豆
+products[9]  = new Product("./img/product/9.png",  "./se/09.ogg");	// FOODACTION美作
 products[10] = new Product("./img/product/10.png", "./se/10.ogg");	// 真庭ブランド
 products[11] = new Product("./img/product/11.png", "./se/11.ogg");	// 蒜山ジャージーヨーグルト
 products[12] = new Product("./img/product/12.png", "./se/12.ogg");	// 紅酢
