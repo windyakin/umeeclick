@@ -45,20 +45,17 @@ eventsound.load();
 // jQuery的処理はここから
 $(function () {
 	
-	// 画像を#productに追加
-	/*
-	$.each(products, function(id, p) {
-		var imgtag = $("<img>").attr("src", p.imageurl);
-		var divtag = $("<div>").append(imgtag);
-		this.image = divtag.appendTo("#product");
-	});
-	*/
+	{
+		$("#character").transition({opacity:0}, 0);
+		$("#baloon").transition({opacity:0}, 0);
+		$("#stamp").transition({opacity:0}, 0);
+	}
 	
 	// 読み込んだ画像のリサイズ・再配置
 	keepRatio(); // ratio.js
 	
 	getCountLoop();
-			normalAnimation(100, "02");
+	printToolbar();
 	
 });
 
@@ -109,15 +106,14 @@ function getCountLoop()
 				}
 				// アニメーション中であればカウント値のみ増やす
 				else {
-					
+					$("#count").text(data.total);
 				}
-				$("#count").text(data.total);
 			}
 			now = data;
 		},
 		
 		complete: function () {
-			setTimeout(getCountLoop, 5000);
+			setTimeout(getCountLoop, 1000);
 		}
 		
 	});
@@ -133,23 +129,86 @@ function normalAnimation( count, booth )
 	
 	// 商品画像の置き換え
 	$("#transobj img").attr("src", products[booth].image);
+	// ○○人目の部分
+	$("#baloon div").text(count);
 	
 	// 改めてサイズを取り直す
 	keepRatio(); // ratio.js
 	
-	var draw     = getSize($("#aspect"));
-	var transobj = $("#transobj");
-	var transize = getSize(transobj);
-	var sound    = products[booth].sound;
+	var image = $("#transobj");
+	var draw  = getSize($("#aspect"));
+	var img   = getSize(image);
+	var sound = products[booth].sound;
 	
 	// 出現中心のポイントを設定
 	var center = {
-		y: transize.w + draw.h/2 - transize.h/2,
-		x: draw.w/2 - transize.w/2
+		y: img.w + draw.h/2 - img.h/2,
+		x: draw.w/2 - img.w/2
 	};
 	
-	sound.load();
-	sound.play();
+	// ここからアニメーション処理
+	$("#aspect")
+		// カウンター非表示
+		.queue( function (next) {
+			$("#countbox").transition({ opacity: 0 }, 500, 'ease');
+			$("#telop").transition({ opacity: 0 }, 500, 'ease');
+			next();
+		})
+		// 画像アニメーション
+		.queue( function (next) {
+			image.transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
+			next();
+		})
+		.delay(500)
+		// キャラ出現アニメーション
+		.queue( function (next) {
+			$("#baloon").transition({opacity:1.0, rotate:-15}, 400);
+			$("#character").transition({ opacity: 1.0 }, 800);
+			next();
+		})
+		// 音を鳴らす
+		.queue( function (next) {
+			sound.load();
+			sound.play();
+			next();
+		})
+		.delay(4500)
+		
+		// 音を鳴らす
+		.queue( function (next) {
+			sound.load();
+			sound.play();
+			next();
+		})
+		.delay(3500)
+		
+		// 画像アニメーション
+		.queue( function (next) {
+			image.transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
+			next();
+		})
+		// キャラ消失アニメーション
+		.queue( function (next) {
+			$("#character").transition({opacity:0}, 700);
+			$("#baloon").transition({opacity:0}, 700).transition({rotate:0},0);
+			next();
+		})
+		.delay(700)
+		
+		// カウンター表示
+		.queue( function (next) {
+			$("#count").text(now.total);
+			$("#countbox").transition({opacity:1}, 500, 'ease');
+			$("#telop").transition({opacity:1}, 500, 'ease');
+			next();
+		})
+		.delay(500)
+		
+		// 次のアニメーションへ
+		.queue( function (next) {
+			aFlag = 0;
+			next();
+		});
 	
 }
 
@@ -158,6 +217,27 @@ function getSize( dom )
 	var w = dom.width();
 	var h = dom.height();
 	return { w: w, h: h };
+}
+
+function printToolbar()
+{
+	$.each(products, function (id, p) {
+		$("<button>").text(id).appendTo("#toolbar");
+	});
+	
+	// ツールバーの出現
+	$(window).mousemove(function (e) {
+		var wsh = document.documentElement.clientHeight;
+		if ( e.pageY >= wsh - 80 ) {
+			$("div#toolbar").slideDown();
+		}
+		else {
+			$("div#toolbar").slideUp();
+		}
+	});
+	$("#toolbar button").click(function(){
+		$.get("./c.cgi?"+$(this).text());
+	});
 }
 
 })();
