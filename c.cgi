@@ -2,7 +2,8 @@
 #====================================================================================================
 #
 #	カウント集計用CGI
-#	c.cgi
+#	c.cgi - (c)2013 Takuto KANZAKI
+#	The MIT License. (http://opensource.org/licenses/mit-license.php)
 #
 #	ブース番号をつけてアクセスすることで，カウントを集計します。
 #
@@ -21,11 +22,6 @@ exit(main());
 
 sub main
 {
-	my $total  = 0;
-	my $booth  = sprintf("%02d", $ARGV[0]);
-	my $data   = JSON->new->allow_nonref;
-	my $result = 0;
-	
 	# debug start
 	if ( $ARGV[0] !~ /^\d+$/ ) {
 		print 'c.cgi - (c)2012 windyakin.'."\n";
@@ -36,11 +32,16 @@ sub main
 		print 'Return: [RoundNumFlag(0 or 1)][EOF]'."\n";
 		print "\n";
 		print '[補足]'."\n";
-		print '現在のカウント値は /count.json に保存されています。'."\n";
+		print '現在のカウント値は ./count.json に保存されています。'."\n";
 		print 'カウントのリセットは /c.cgi?r できるようにします(予定)。';
 		exit;
 	}
 	# debug end
+	
+	my $total  = 0;
+	my $booth  = $ARGV[0];
+	my $data   = JSON->new->allow_nonref;
+	my $result = 0;
 	
 	# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
 	if ( open( CNT, "+< ./count.json" ) )
@@ -54,15 +55,15 @@ sub main
 		# トータルカウント値を加算
 		$total = ++$data->{'total'};
 		# ブース情報を書き込み
-		$data->{'booth'} = $booth;
+		$data->{'booth'} = $booth+0;
 		# ブースごとのカウント値を加算
 		$data->{'stati'}->{$booth}++;
 		
 		# キリ番の時に情報を書き込む
 		if ( judgeKiriban($total) ) {
 			$data->{'kiriban'}->{'count'}  = $total;
-			$data->{'kiriban'}->{'booth'}  = $booth;
-			$data->{'kiriban'}->{'time'} = time; 
+			$data->{'kiriban'}->{'booth'}  = $booth+0;
+			$data->{'kiriban'}->{'time'}   = time;
 			$result = 1;
 		}
 		
