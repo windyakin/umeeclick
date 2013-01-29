@@ -12,12 +12,10 @@
 
 // 商品のクラス
 var Product = function(imageurl, soundurl) {
-	this.imageurl = imageurl;
+	this.image    = imageurl;
 	this.soundurl = soundurl;
-	this.image = $("");
 	this.sound = new Audio(this.soundurl);
 	this.sound.load();
-//	this.duration = 3000;//this.sound.duration;
 };
 
 // 商品ごとの画像と音声の設定
@@ -48,16 +46,19 @@ eventsound.load();
 $(function () {
 	
 	// 画像を#productに追加
+	/*
 	$.each(products, function(id, p) {
 		var imgtag = $("<img>").attr("src", p.imageurl);
 		var divtag = $("<div>").append(imgtag);
 		this.image = divtag.appendTo("#product");
 	});
+	*/
 	
 	// 読み込んだ画像のリサイズ・再配置
 	keepRatio(); // ratio.js
 	
 	getCountLoop();
+			normalAnimation(100, "02");
 	
 });
 
@@ -103,9 +104,10 @@ function getCountLoop()
 					}
 					// 通常のアニメーション
 					else if ( now.total < data.total ) {
-						console.log("増えた！");
+						normalAnimation( data.total, data.booth );
 					}
 				}
+				// アニメーション中であればカウント値のみ増やす
 				else {
 					
 				}
@@ -121,10 +123,40 @@ function getCountLoop()
 	});
 }
 
+function normalAnimation( count, booth )
+{
+	// ブース番号が存在しなければ何も実行しない
+	if (!products[booth]) return;
+	
+	// アニメーションフラグを立てる
+	aFlag = 1;
+	
+	// 商品画像の置き換え
+	$("#transobj img").attr("src", products[booth].image);
+	
+	// 改めてサイズを取り直す
+	keepRatio(); // ratio.js
+	
+	var draw     = getSize($("#aspect"));
+	var transobj = $("#transobj");
+	var transize = getSize(transobj);
+	var sound    = products[booth].sound;
+	
+	// 出現中心のポイントを設定
+	var center = {
+		y: transize.w + draw.h/2 - transize.h/2,
+		x: draw.w/2 - transize.w/2
+	};
+	
+	sound.load();
+	sound.play();
+	
+}
+
 function getSize( dom )
 {
-	var w = $(dom).width();
-	var h = $(dom).height();
+	var w = dom.width();
+	var h = dom.height();
 	return { w: w, h: h };
 }
 
