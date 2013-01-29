@@ -1,13 +1,13 @@
-/*!
+/*
  *
- *	カウント表示アニメーション用JS
- *	count.js - (c)2012 windyakin ( http://windyakin.net/ )
- *
- *	結局作りなおしてます…。
+ *	カウント表示アニメーション用JavaScript
+ *	count.js - (c)2012 Takuto KANZAKI
+ *	The MIT License. (http://opensource.org/licenses/mit-license.php)
  *
  *	Special Thanks iroiro123!
  *
  */
+
 (function() {
 
 // 商品のクラス
@@ -75,6 +75,14 @@ var now = {
 // 最後にアニメーションを行ったブースの記憶用
 var lastbooth = 0;
 
+//========================================================================================
+//
+//	カウント値観測関数 - getCountLoop
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
 function getCountLoop()
 {
 	$.ajax({
@@ -120,6 +128,15 @@ function getCountLoop()
 	});
 }
 
+//========================================================================================
+//
+//	通常アニメーション - animateNormal
+//
+// -----------------------------------------------------------------------------
+//	param	count		カウント値
+//			booth		ブース番号
+//	return	なし
+//========================================================================================
 function animateNormal( count, booth )
 {
 	// ブース番号が存在しなければ何も実行しない
@@ -135,17 +152,11 @@ function animateNormal( count, booth )
 	
 	// 改めてサイズを取り直す
 	keepRatio(); // ratio.js
+	// 出現中心のポイントを計算
+	var center = getCenter();
 	
-	var image = $("#transobj");
-	var draw  = getSize($("#aspect"));
-	var img   = getSize(image);
+	// サウンドのロード
 	var sound = products[booth].sound;
-	
-	// 出現中心のポイントを設定
-	var center = {
-		y: img.w + draw.h/2 - img.h/2,
-		x: draw.w/2 - img.w/2
-	};
 	
 	// ここからアニメーション処理
 	$("#aspect")
@@ -157,7 +168,7 @@ function animateNormal( count, booth )
 		})
 		// 画像アニメーション
 		.queue( function (next) {
-			image.transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
+			$("#transobj").transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
 			next();
 		})
 		.delay(500)
@@ -185,7 +196,7 @@ function animateNormal( count, booth )
 		
 		// 画像アニメーション
 		.queue( function (next) {
-			image.transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
+			$("#transobj").transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
 			next();
 		})
 		// キャラ消失アニメーション
@@ -214,6 +225,14 @@ function animateNormal( count, booth )
 	
 }
 
+//========================================================================================
+//
+//	カウント値増加アニメーション - animateCountup
+//
+// -----------------------------------------------------------------------------
+//	param	count		カウント値
+//	return	なし
+//========================================================================================
 function animateCountup( count )
 {
 	$("div#countbox")
@@ -230,17 +249,139 @@ function animateCountup( count )
 	
 }
 
+//========================================================================================
+//
+//	キリ番アニメーション - animateKiriban
+//
+// -----------------------------------------------------------------------------
+//	param	count		カウント値
+//			booth		ブース番号
+//	return	なし
+//========================================================================================
 function animateKiriban( count, booth )
 {
+	// ブース番号が存在しなければ何も実行しない
+	if (!products[booth]) return;
+	
+	// アニメーションフラグを立てる
+	aFlag = 1;
+	
+	// 商品画像の置き換え
+	$("#transobj img").attr("src", products[booth].image);
+	// ○○人目の部分
+	$("#baloon div").text(count);
+	
+	// 改めてサイズを取り直す
+	keepRatio(); // ratio.js
+	// 出現中心のポイントを計算
+	var center = getCenter();
+	
+	// サウンドのロード
+	var sound = products[booth].sound;
+	
+	// ここからアニメーション処理
+	$("#aspect")
+		// カウンター非表示
+		.queue( function (next) {
+			$("#countbox").transition({ opacity: 0 }, 500, 'ease');
+			$("#telop").transition({ opacity: 0 }, 500, 'ease');
+			next();
+		})
+		// 画像アニメーション
+		.queue( function (next) {
+			$("#transobj").transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
+			next();
+		})
+		.delay(500)
+		// キャラ出現アニメーション
+		.queue( function (next) {
+			$("#baloon").transition({ opacity: 1.0, rotate: -15 }, 400);
+			$("#character").transition({ opacity: 1.0 }, 800);
+			next();
+		})
+		// 音を鳴らす
+		.queue( function (next) {
+			sound.load();
+			sound.play();
+			next();
+		})
+		.delay(4500)
+		
+		// 音を鳴らす
+		.queue( function (next) {
+			sound.load();
+			sound.play();
+			next();
+		})
+		.delay(3500)
+		
+		// 画像アニメーション
+		.queue( function (next) {
+			$("#transobj").transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
+			next();
+		})
+		// キャラ消失アニメーション
+		.queue( function (next) {
+			$("#character").transition({ opacity: 0 }, 700);
+			$("#baloon").transition({ opacity: 0 }, 700).transition({ rotate: 0 },0);
+			next();
+		})
+		.delay(700)
+		
+		// カウンター表示
+		.queue( function (next) {
+			$("#count").text(now.total);
+			$("#countbox").transition({ opacity: 1 }, 500, 'ease');
+			$("#telop").transition({ opacity: 1 }, 500, 'ease');
+			next();
+		})
+		.delay(500)
+		
+		// おわり
+		.queue( function (next) {
+			aFlag = 0;
+			lastbooth = booth;
+			next();
+		});
+	
 }
 
-function getSize( dom )
+//========================================================================================
+//
+//	アニメーション用中心位置計算関数 - getCenter
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	中心位置までの距離
+//========================================================================================
+function getCenter()
 {
-	var w = dom.width();
-	var h = dom.height();
-	return { w: w, h: h };
+	// サイズを取得するだけ
+	var getSize = function(dom) {
+		var w = dom.width();
+		var h = dom.height();
+		return { w: w, h: h };
+	};
+	
+	// それぞれのサイズを取得
+	var draw  = getSize($("#aspect"));
+	var img   = getSize($("#transobj"));
+	
+	// 計算して返す
+	return {
+		y: img.w + draw.h/2 - img.h/2,
+		x: draw.w/2 - img.w/2
+	};
 }
 
+//========================================================================================
+//
+//	(debug)ツールバー表示関数 - printToolbar
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
 function printToolbar()
 {
 	$.each(products, function (id, p) {

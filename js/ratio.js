@@ -1,3 +1,10 @@
+/*
+ *
+ *	画面対比保持用JavaScript
+ *	ratio.js - (c)2013 Takuto KANZAKI
+ *	The MIT License. (http://opensource.org/licenses/mit-license.php)
+ *
+ */
 $(function(){
 	// ウインドウサイズが変更されたら相対を取り直す
 	$(window).resize(keepRatio);
