@@ -118,6 +118,9 @@ function getCountLoop()
 					}
 				}
 			}
+			else if ( data.total != now.total ) {
+				animateCountup( data.total );
+			}
 			now = data;
 		},
 		// 通信が完了したら１秒後に自分自身を呼び出す
@@ -382,9 +385,7 @@ function getCenter()
 {
 	// サイズを取得するだけ
 	var getSize = function(dom) {
-		var w = dom.width();
-		var h = dom.height();
-		return { w: w, h: h };
+		return { w: dom.width(), h: dom.height() };
 	};
 	
 	// それぞれのサイズを取得
