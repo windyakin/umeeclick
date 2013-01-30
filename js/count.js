@@ -46,16 +46,16 @@ eventsound.load();
 $(function () {
 	
 	{
-		$("#character").transition({ opacity: 0 }, 0);
-		$("#baloon").transition({ opacity: 0 }, 0);
-		$("#stamp").transition({ opacity: 0 }, 0);
+		$("#character").transition({opacity: 0}, 0);
+		$("#baloon").transition({opacity: 0}, 0);
+		$("#stamp").transition({opacity: 0}, 0);
 	}
 	
 	// 読み込んだ画像のリサイズ・再配置
 	keepRatio(); // ratio.js
 	
 	getCountLoop();
-	printToolbar();
+	//printToolbar();
 	
 });
 
@@ -125,7 +125,7 @@ function getCountLoop()
 		},
 		// 通信が完了したら１秒後に自分自身を呼び出す
 		complete: function () {
-			setTimeout(getCountLoop, 1000);
+			//setTimeout(getCountLoop, 1000);
 		}
 		
 	});
@@ -140,7 +140,7 @@ function getCountLoop()
 //			booth		ブース番号
 //	return	なし
 //========================================================================================
-function animateNormal( count, booth )
+function animateNormal(count, booth)
 {
 	// ブース番号が存在しなければ何も実行しない
 	if (!products[booth]) return;
@@ -165,20 +165,20 @@ function animateNormal( count, booth )
 	$("#aspect")
 		// カウンター非表示
 		.queue( function (next) {
-			$("#countbox").transition({ opacity: 0 }, 500, 'ease');
-			$("#telop").transition({ opacity: 0 }, 500, 'ease');
+			$("#countbox").transition({opacity: 0}, 500, 'ease');
+			$("#telop").transition({opacity: 0}, 500, 'ease');
 			next();
 		})
 		// 画像アニメーション
 		.queue( function (next) {
-			$("#transobj").transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
+			$("#transobj").transition({y: center.y, x: center.x, rotate: 365}, 800, 'ease');
 			next();
 		})
 		.delay(500)
 		// キャラ出現アニメーション
 		.queue( function (next) {
-			$("#baloon").transition({ opacity: 1.0, rotate: -15 }, 400);
-			$("#character").transition({ opacity: 1.0 }, 800);
+			$("#baloon").transition({opacity: 1.0, rotate: -15}, 400);
+			$("#character").transition({opacity: 1.0}, 800);
 			next();
 		})
 		// 音を鳴らす
@@ -199,13 +199,13 @@ function animateNormal( count, booth )
 		
 		// 画像アニメーション
 		.queue( function (next) {
-			$("#transobj").transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
+			$("#transobj").transition({y: -center.y, x: -center.x, rotate: -365}, 700, 'ease');
 			next();
 		})
 		// キャラ消失アニメーション
 		.queue( function (next) {
-			$("#character").transition({ opacity: 0 }, 700);
-			$("#baloon").transition({ opacity: 0 }, 700).transition({ rotate: 0 },0);
+			$("#character").transition({opacity: 0}, 700);
+			$("#baloon").transition({opacity: 0}, 700).transition({rotate: 0},0);
 			next();
 		})
 		.delay(700)
@@ -213,8 +213,8 @@ function animateNormal( count, booth )
 		// カウンター表示
 		.queue( function (next) {
 			$("#count").text(now.total);
-			$("#countbox").transition({ opacity: 1 }, 500, 'ease');
-			$("#telop").transition({ opacity: 1 }, 500, 'ease');
+			$("#countbox").transition({opacity: 1}, 500, 'ease');
+			$("#telop").transition({opacity: 1}, 500, 'ease');
 			next();
 		})
 		.delay(500)
@@ -236,17 +236,17 @@ function animateNormal( count, booth )
 //	param	count		カウント値
 //	return	なし
 //========================================================================================
-function animateCountup( count )
+function animateCountup(count)
 {
 	$("div#count")
 		.queue( function (next) {
-			$(this).transition( { opacity: 0, scale: 1.2 }, 500, 'ease');
+			$(this).transition( {opacity: 0, scale: 1.2}, 500, 'ease');
 			next();
 		})
 		.delay(500)
 		.queue( function (next) {
 			$(this).text(count);
-			$(this).transition( { opacity: 1, scale: 1.0 }, 500, 'ease' );
+			$(this).transition( {opacity: 1, scale: 1.0}, 500, 'ease');
 			next();
 		});
 	
@@ -261,7 +261,7 @@ function animateCountup( count )
 //			booth		ブース番号
 //	return	なし
 //========================================================================================
-function animateKiriban( count, booth )
+function animateKiriban(count, booth)
 {
 	// ブース番号が存在しなければ何も実行しない
 	if (!products[booth]) return;
@@ -286,21 +286,21 @@ function animateKiriban( count, booth )
 	$("#aspect")
 		// カウンター非表示
 		.queue( function (next) {
-			$("#countbox").transition({ opacity: 0 }, 500, 'ease');
-			$("#telop").transition({ opacity: 0 }, 500, 'ease');
+			$("#countbox").transition({opacity: 0}, 500, 'ease');
+			$("#telop").transition({opacity: 0}, 500, 'ease');
 			next();
 		})
 		// 画像アニメーション
 		.queue( function (next) {
-			$("#transobj").transition({ y: center.y, x: center.x, rotate: 365 }, 800, 'ease');
+			$("#transobj").transition({y: center.y, x: center.x, rotate: 365}, 800, 'ease');
 			next();
 		})
 		.delay(500)
 		// キャラ出現アニメーション
 		.queue( function (next) {
-			$("#baloon").transition({ opacity: 1.0, rotate: -15 }, 400);
-			$("#character").transition({ opacity: 1.0 }, 800);
-			$("#stamp").transition({ rotate: 0 }, 0 ).transition({ opacity: 1.0, rotate: -355 }, 700);
+			$("#baloon").transition({opacity: 1.0, rotate: -15}, 400);
+			$("#character").transition({opacity: 1.0}, 800);
+			$("#stamp").transition({rotate: 0}, 0).transition({opacity: 1.0, rotate: -355}, 700);
 			next();
 		})
 		// 音を鳴らす
@@ -321,7 +321,7 @@ function animateKiriban( count, booth )
 		
 		// 回転させよう
 		.queue( function (next) {
-			$("#stamp").transition({ rotate: 365 }, 700);
+			$("#stamp").transition({rotate: 365}, 700);
 			next();
 		})
 		
@@ -343,14 +343,14 @@ function animateKiriban( count, booth )
 		
 		// 画像アニメーション
 		.queue( function (next) {
-			$("#transobj").transition({ y: -center.y, x: -center.x, rotate: -365 }, 700, 'ease');
+			$("#transobj").transition({y: -center.y, x: -center.x, rotate: -365}, 700, 'ease');
 			next();
 		})
 		// キャラ消失アニメーション
 		.queue( function (next) {
-			$("#character").transition({ opacity: 0 }, 700);
-			$("#baloon").transition({ opacity: 0 }, 700).transition({ rotate: 0 },0);
-			$("#stamp").transition({ opacity: 0 }, 700);
+			$("#character").transition({opacity: 0}, 700);
+			$("#baloon").transition({opacity: 0}, 700).transition({rotate: 0},0);
+			$("#stamp").transition({opacity: 0}, 700);
 			next();
 		})
 		.delay(700)
@@ -358,8 +358,8 @@ function animateKiriban( count, booth )
 		// カウンター表示
 		.queue( function (next) {
 			$("#count").text(now.total);
-			$("#countbox").transition({ opacity: 1 }, 500, 'ease');
-			$("#telop").transition({ opacity: 1 }, 500, 'ease');
+			$("#countbox").transition({opacity: 1}, 500, 'ease');
+			$("#telop").transition({opacity: 1}, 500, 'ease');
 			next();
 		})
 		.delay(500)
@@ -385,7 +385,7 @@ function getCenter()
 {
 	// サイズを取得するだけ
 	var getSize = function(dom) {
-		return { w: dom.width(), h: dom.height() };
+		return {w: dom.width(), h: dom.height()};
 	};
 	
 	// それぞれのサイズを取得
