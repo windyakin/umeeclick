@@ -107,7 +107,7 @@ div#count {
 	left: 50%;
 }
 
-#telop {
+#scrollbox {
 	position: absolute;
 	bottom: 5%;
 	left: 0;
@@ -117,16 +117,18 @@ div#count {
 	height: 15%;
 	background: rgba(255, 255, 255, 0.7);
 	overflow: hidden;
-	font-weight: bold;
 }
 
-#telop div {
+ul#telop {
+	margin: 0;
+	padding: 0;
+	
+}
+
+#telop li {
 	position: absolute;
 	white-space: nowrap;
-}
-
-#telop img {
-	vertical-align: -0.15em;
+	font-weight: bold;
 }
 
 #telop div.scrollingtext span
