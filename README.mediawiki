@@ -43,24 +43,24 @@ Copyright &copy; 2012 Takuto KANZAKI
 ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。 作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。 
 
 === クリエイティブ・コモンズ・ライセンスで提供されるもの ===
-以下の画像及び音声は[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja/|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
-* img/*
+以下の画像及び音声は[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
+* img/\*
 ** ただし img/logo.svg, img/character1.png, img/character2.png を除く
 * se/*.ogg
 
 === その他作者に帰属するもの ===
-* [[http://jquery.org/|jQuery]] v1.8.3 - jQuery Foundation
+* [[http://jquery.org/|jQuery]]  v1.8.3 - jQuery Foundation
 ** js/jquery.core.min.js
 
-* [[http://www.google.com/webfonts/specimen/Lato| Lato]] - Łukasz Dziedzic
+* [[http://www.google.com/webfonts/specimen/Lato| Lato]]  - Łukasz Dziedzic
 ** ttf/Lato.ttf
 
-* [[http://ricostacruz.com/jquery.transit/|jQuery Transit]] - Rico Sta. Cruz
+* [[http://ricostacruz.com/jquery.transit/|jQuery Transit]]  - Rico Sta. Cruz
 ** js/jquery.transit.min.js
 
-* [[http://www.maxvergelli.com/jquery-scroller/|jQuery Scroller]] v.1.0 - Max Vergelli
+* [[http://www.maxvergelli.com/jquery-scroller/|jQuery Scroller]]  v.1.0 - Max Vergelli
 ** js/jquery.scroller.min.js	
 
-*[[http://search.cpan.org/dist/JSON-2.53/|JSON]] Version 2.53 - Mark Shelor
+* [[http://search.cpan.org/dist/JSON-2.53/|JSON]]  Version 2.53 - Mark Shelor
 ** lib/JSON.pm
 ** lib/JSON/*
