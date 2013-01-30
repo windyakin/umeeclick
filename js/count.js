@@ -235,15 +235,15 @@ function animateNormal( count, booth )
 //========================================================================================
 function animateCountup( count )
 {
-	$("div#countbox")
+	$("div#count")
 		.queue( function (next) {
-			$(this).transition( { opacity: 0 }, 500, 'ease');
+			$(this).transition( { opacity: 0, scale: 1.2 }, 500, 'ease');
 			next();
 		})
 		.delay(500)
 		.queue( function (next) {
-			$("div#count").text(count);
-			$(this).transition( { opacity: 1 }, 500, 'ease' );
+			$(this).text(count);
+			$(this).transition( { opacity: 1, scale: 1.0 }, 500, 'ease' );
 			next();
 		});
 	
@@ -297,6 +297,7 @@ function animateKiriban( count, booth )
 		.queue( function (next) {
 			$("#baloon").transition({ opacity: 1.0, rotate: -15 }, 400);
 			$("#character").transition({ opacity: 1.0 }, 800);
+			$("#stamp").transition({ rotate: 0 }, 0 ).transition({ opacity: 1.0, rotate: -355 }, 700);
 			next();
 		})
 		// 音を鳴らす
@@ -314,6 +315,12 @@ function animateKiriban( count, booth )
 			next();
 		})
 		.delay(3500)
+		
+		// 回転させよう
+		.queue( function (next) {
+			$("#stamp").transition({ rotate: 365 }, 700);
+			next();
+		})
 		
 		// 音を鳴らす
 		.queue( function (next) {
@@ -340,6 +347,7 @@ function animateKiriban( count, booth )
 		.queue( function (next) {
 			$("#character").transition({ opacity: 0 }, 700);
 			$("#baloon").transition({ opacity: 0 }, 700).transition({ rotate: 0 },0);
+			$("#stamp").transition({ opacity: 0 }, 700);
 			next();
 		})
 		.delay(700)
@@ -355,8 +363,8 @@ function animateKiriban( count, booth )
 		
 		// おわり
 		.queue( function (next) {
-			aFlag = 0;
-			lastbooth = booth;
+			aFlag = 0;			// アニメーション中のフラグを解除
+			lastbooth = booth;	// 最後にアニメーションしたブースを記憶
 			next();
 		});
 	
