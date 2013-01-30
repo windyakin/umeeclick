@@ -22,7 +22,7 @@
 
 == 著作権について ==
 基本的に私が書いたソースコードに関しては[[http://opensource.org/licenses/mit-license.php|MIT License]]([[http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license|日本語訳]])で提供されています。
-また画像(一部を除く)と音声に関しては[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja/|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
+また画像(一部を除く)と音声に関しては[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja|クリエイティブ・コモンズ]](表示 - 非営利 - 改変禁止 3.0 非移植)で提供されます。
 その他のモジュールやプラグインのライセンスについては製作者に帰属しています。
 
 === MIT License で提供されるもの ===
@@ -43,7 +43,7 @@ Copyright &copy; 2012 Takuto KANZAKI
 ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。 作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。 
 
 === クリエイティブ・コモンズ・ライセンスで提供されるもの ===
-以下の画像及び音声は[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
+以下の画像及び音声は[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja|クリエイティブ・コモンズ]](表示 - 非営利 - 改変禁止 3.0 非移植)で提供されます。
 * img/\*
 ** ただし img/logo.svg, img/character1.png, img/character2.png を除く
 * se/*.ogg
