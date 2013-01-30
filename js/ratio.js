@@ -6,6 +6,8 @@
  *
  */
 $(function(){
+	// 全部の描画が終わった頃に動作させる
+	setTimeout(keepRatio, 1000);
 	// ウインドウサイズが変更されたら相対を取り直す
 	$(window).resize(keepRatio);
 });
@@ -37,9 +39,9 @@ function keepRatio()
 		"line-height":	Math.round(h*0.35)+"px",
 	});
 	
-	$("#telop div").css({
-		"font-size":	Math.round(h*0.1)+"px",
-		"line-height":	Math.round(h*0.15)+"px",
+	$("#telop li").css({
+		"font-size":	Math.round(h*0.11)+"px",
+		"line-height":	Math.round(h*0.16)+"px",
 	});
 	
 	$("#product div").css({
