@@ -1,0 +1,66 @@
+= うめぇ～な！クリック(umeeclick) =
+== 概要 ==
+このリポジトリは「第47回 スーパーマーケット トレードショー2013」の岡山県ブースに設置される，「'''うめぇ～な！クリック'''」という来場者による簡易評価システムのプログラムの一部を公開しています。
+
+完全にオレオレ仕様なので，転用はあまりおすすめできません(私はただgithubでバージョン管理をしたいだけなのです)。
+
+== うめぇ～な！クリックとは ==
+うめぇ～な！クリックは，顧客(来場者)が商品やサービスに「いいな」と思ってもらった際に，ボタンを押してもらうことで提供者が顧客からレスポンスを貰うことのできるソリューションです。
+
+
+== 動作環境 ==
+実際に動作をさせるためには専用のハードウェアであるボタンが必要になります。ここで公開しているのはカウンターの表示部分のみで，ボタンについての技術・ソースコードの公開はしていません。
+
+以下に記述する環境はすべて表示部分の条件のみです。
+
+=== 推奨動作環境 ===
+* CGI(Perl)の動作が可能なHTTPD(AnHTTPD/Apache2)がインストールされている
+* Perl 5.8以上(Perl 6は含まない)もしくはそのディストリビューション系ソフトウェアがインストールされている
+* Firefox18.0以上が快適に動作するハードウェア構成
+* 5MB以上のディスクスペース
+
+
+== 著作権について ==
+基本的に私が書いたソースコードに関しては[[http://opensource.org/licenses/mit-license.php|MIT License]]([[http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license|日本語訳]])で提供されています。
+また画像(一部を除く)と音声に関しては[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja/|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
+その他のモジュールやプラグインのライセンスについては製作者に帰属しています。
+
+=== MIT License で提供されるもの ===
+以下のソースコードは[[http://opensource.org/licenses/mit-license.php|MIT License]]([[http://sourceforge.jp/projects/opensource/wiki/licenses%2FMIT_license|日本語訳]])で提供されています。
+* js/count.js
+* js/ratio.js
+* c.cgi
+* *.html
+* css/style.css
+
+==== ライセンス表記 ====
+Copyright &copy; 2012 Takuto KANZAKI
+
+以下に定める条件に従い、本ソフトウェアおよび関連文書のファイル（以下「ソフトウェア」）の複製を取得するすべての人に対し、ソフトウェアを無制限に扱うことを無償で許可します。これには、ソフトウェアの複製を使用、複写、変更、結合、掲載、頒布、サブライセンス、および/または販売する権利、およびソフトウェアを提供する相手に同じことを許可する権利も無制限に含まれます。
+
+上記の著作権表示および本許諾表示を、ソフトウェアのすべての複製または重要な部分に記載するものとします。
+
+ソフトウェアは「現状のまま」で、明示であるか暗黙であるかを問わず、何らの保証もなく提供されます。ここでいう保証とは、商品性、特定の目的への適合性、および権利非侵害についての保証も含みますが、それに限定されるものではありません。 作者または著作権者は、契約行為、不法行為、またはそれ以外であろうと、ソフトウェアに起因または関連し、あるいはソフトウェアの使用またはその他の扱いによって生じる一切の請求、損害、その他の義務について何らの責任も負わないものとします。 
+
+=== クリエイティブ・コモンズ・ライセンスで提供されるもの ===
+以下の画像及び音声は[[http://creativecommons.org/licenses/by-nc-nd/3.0/deed.ja/|クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 3.0 非移植]]で提供されます。
+* img/*
+** ただし img/logo.svg, img/character1.png, img/character2.png を除く
+* se/*.ogg
+
+=== その他作者に帰属するもの ===
+* [[http://jquery.org/|jQuery]] v1.8.3 - jQuery Foundation
+** js/jquery.core.min.js
+
+* [[http://www.google.com/webfonts/specimen/Lato| Lato]] - Łukasz Dziedzic
+** ttf/Lato.ttf
+
+* [[http://ricostacruz.com/jquery.transit/|jQuery Transit]] - Rico Sta. Cruz
+** js/jquery.transit.min.js
+
+* [[http://www.maxvergelli.com/jquery-scroller/|jQuery Scroller]] v.1.0 - Max Vergelli
+** js/jquery.scroller.min.js	
+
+*[[http://search.cpan.org/dist/JSON-2.53/|JSON]] Version 2.53 - Mark Shelor
+** lib/JSON.pm
+** lib/JSON/*
