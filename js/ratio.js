@@ -39,7 +39,7 @@ function keepRatio()
 		"line-height":	Math.round(h*0.35)+"px",
 	});
 	
-	$("#telop li").css({
+	$("#telop").css({
 		"font-size":	Math.round(h*0.11)+"px",
 		"line-height":	Math.round(h*0.16)+"px",
 	});
