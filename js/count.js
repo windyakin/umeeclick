@@ -125,7 +125,7 @@ function getCountLoop()
 		},
 		// 通信が完了したら１秒後に自分自身を呼び出す
 		complete: function () {
-			//setTimeout(getCountLoop, 1000);
+			setTimeout(getCountLoop, 1000);
 		}
 		
 	});
