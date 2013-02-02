@@ -27,7 +27,7 @@ function printTelopLoop(i)
 	
 	var obj   = $("#telop");
 	
-	telop[i] = convertColortext(telop[i]);
+	telop[i] = convertTelopStr(telop[i]);
 	
 	// テキストの入れ替え
 	obj.html(telop[i]);
@@ -69,10 +69,16 @@ function printTelopLoop(i)
 	
 }
 
-function convertColortext(str)
+function convertTelopStr(str)
 {
-	str = str.replace(/\*([^\*]*)\*/gi, "<span id=\"red\">$1</span>");
+	// 括弧を半角に
+	str = str.replace(/(?:（|\()([^\(]*)(?:\)|）)/gi, "($1)");
+	// カギ括弧を半角に
+	str = str.replace(/(?:｢|「)([^」]*)(?:｣|」)/gi, "｢$1｣");
+	// 緑色の変換
 	str = str.replace(/\+([^\+]*)\+/gi, "<span id=\"green\">$1</span>");
+	// 赤色の変換
+	str = str.replace(/\*([^\*]*)\*/gi, "<span id=\"red\">$1</span>");
 	return str;
 }
 
