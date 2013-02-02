@@ -33,7 +33,6 @@ div#aspect {
 	height: 100%;
 	background: -moz-radial-gradient(50% 50%, circle farthest-side, rgb(255,225,185), rgb(255,170,0));
 	overflow: hidden;
-	/*cursor: url("../img/cursor.cur"), default;*/
 }
 
 #logo {
@@ -126,6 +125,14 @@ div#count {
 	display: inline-block;
 	white-space: nowrap;
 	font-weight: bold;
+}
+
+#telop span#red {
+	color: #c40000;
+}
+
+#telop span#green {
+	color: #027a00;
 }
 
 div#toolbar {

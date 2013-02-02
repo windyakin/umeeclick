@@ -55,7 +55,7 @@ $(function () {
 	keepRatio(); // ratio.js
 	
 	getCountLoop();
-	//printToolbar();
+	printToolbar();
 	
 });
 

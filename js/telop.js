@@ -25,18 +25,16 @@ function printTelopLoop(i)
 	// テロップが存在しなければ何も実行しない
 	if (!telop[i]) printTelopLoop(0);
 	
-	console.log("printTelopLoop("+i+")");
-	
 	var obj   = $("#telop");
 	
+	telop[i] = convertColortext(telop[i]);
+	
 	// テキストの入れ替え
-	obj.text(telop[i]);
+	obj.html(telop[i]);
 	
 	// 幅の取得
 	var width = obj.width();
 	var sec   = Math.floor(width / 200)*1000;
-	
-	console.log("width:"+width+", sec:"+(sec/1000));
 	
 	$("#telop")
 		// 文字を表示
@@ -58,13 +56,24 @@ function printTelopLoop(i)
 		.delay(100)
 		// もとに戻す
 		.queue( function(next) {
-			obj.transition({x: -$("aspect").width()}, 0, 'linear');
+			obj.transition({x: -$("aspect").width()}, 0, 'linear')
+			// スパゲッティなりかけだが致し方ない…
+			.queue( function(next) {
+				setTimeout( function() {
+					printTelopLoop( ++loop % (telop.length - 1) );
+				}, 100);
+				next()
+			});
 			next();
 		});
-		
-	setTimeout( function() {
-		printTelopLoop( ++loop % (telop.length - 1) );
-	}, 500+500+sec+300);
+	
+}
+
+function convertColortext(str)
+{
+	str = str.replace(/\*([^\*]*)\*/gi, "<span id=\"red\">$1</span>");
+	str = str.replace(/\+([^\+]*)\+/gi, "<span id=\"green\">$1</span>");
+	return str;
 }
 
 })();
