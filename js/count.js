@@ -166,7 +166,7 @@ function animateNormal(count, booth)
 		// カウンター非表示
 		.queue( function (next) {
 			$("#countbox").transition({opacity: 0}, 500, 'ease');
-			$("#telop").transition({opacity: 0}, 500, 'ease');
+			$("#scrollbox").transition({opacity: 0}, 500, 'ease');
 			next();
 		})
 		// 画像アニメーション
@@ -214,7 +214,7 @@ function animateNormal(count, booth)
 		.queue( function (next) {
 			$("#count").text(now.total);
 			$("#countbox").transition({opacity: 1}, 500, 'ease');
-			$("#telop").transition({opacity: 1}, 500, 'ease');
+			$("#scrollbox").transition({opacity: 1}, 500, 'ease');
 			next();
 		})
 		.delay(500)
@@ -287,7 +287,7 @@ function animateKiriban(count, booth)
 		// カウンター非表示
 		.queue( function (next) {
 			$("#countbox").transition({opacity: 0}, 500, 'ease');
-			$("#telop").transition({opacity: 0}, 500, 'ease');
+			$("#scrollbox").transition({opacity: 0}, 500, 'ease');
 			next();
 		})
 		// 画像アニメーション
@@ -359,7 +359,7 @@ function animateKiriban(count, booth)
 		.queue( function (next) {
 			$("#count").text(now.total);
 			$("#countbox").transition({opacity: 1}, 500, 'ease');
-			$("#telop").transition({opacity: 1}, 500, 'ease');
+			$("#scrollbox").transition({opacity: 1}, 500, 'ease');
 			next();
 		})
 		.delay(500)
