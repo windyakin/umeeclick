@@ -32,6 +32,7 @@ div#aspect {
 	width: 100%;
 	height: 100%;
 	background: -moz-radial-gradient(50% 50%, circle farthest-side, rgb(255,225,185), rgb(255,170,0));
+	background: -webkit-gradient(radial, center center, 100, center center, 500, from(rgb(255,225,185)), to(rgb(255,170,0)));;
 	overflow: hidden;
 }
 
