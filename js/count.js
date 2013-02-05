@@ -49,11 +49,14 @@ $(function () {
 		$("#character").transition({opacity: 0}, 0);
 		$("#baloon").transition({opacity: 0}, 0);
 		$("#stamp").transition({opacity: 0}, 0);
+		
+		$("#start").transition({opacity: 0}, 0);
 	}
 	
 	// 読み込んだ画像のリサイズ・再配置
 	keepRatio(); // ratio.js
 	
+	printNowloading();
 	getCountLoop();
 	printToolbar();
 	
@@ -371,6 +374,31 @@ function animateKiriban(count, booth)
 			next();
 		});
 	
+}
+
+function printNowloading()
+{
+	$("#start").delay(500).transition({opacity: 1}, 500);
+	
+	$("#start").click( function() {
+		$("#loading").hide();
+		enterFullscreen();
+	});
+	
+	// フルスクリーン化用関数
+	function enterFullscreen()
+	{
+		var x = document.getElementById("aspect");
+		if (x.webkitRequestFullScreen) {
+			x.webkitRequestFullScreen();
+		}
+		else if (x.mozRequestFullScreen) {
+			x.mozRequestFullScreen();
+		}
+		else {
+			x.requestFullScreen();
+		}
+	}
 }
 
 //========================================================================================
