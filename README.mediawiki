@@ -32,6 +32,7 @@
 * js/telop.js
 * js/analyze.js
 * c.cgi
+* edit.cgi
 * *.html
 * css/style.css
 
