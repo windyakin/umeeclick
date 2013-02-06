@@ -13,7 +13,7 @@
 
 use strict;
 use warnings;
-use CGI::Carp qw(fatalsToBrowser); #debug
+#use CGI::Carp qw(fatalsToBrowser); #debug
 use lib './lib';
 use JSON;
 
@@ -29,7 +29,7 @@ sub main
 		print "\n";
 		print 'Syntax: /c.cgi?[ BoothNum ]'."\n";
 		print 'BoothNum'."\t".'事前に定められたブース番号です'."\n";
-		print 'Return: [RoundNumFlag(0 or 1)][EOF]'."\n";
+		print 'Return: [RoundNumFlag(0 or *)][EOF]'."\n";
 		print "\n";
 		print '[補足]'."\n";
 		print '現在のカウント値は ./count.json に保存されています。'."\n";
@@ -41,7 +41,7 @@ sub main
 	my $total  = 0;
 	my $booth  = $ARGV[0];
 	my $data   = JSON->new->allow_nonref;
-	my $result = 0;
+	my $result = "0";
 	
 	# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
 	if ( open( CNT, "+< ./count.json" ) )
@@ -64,7 +64,7 @@ sub main
 			$data->{'kiriban'}->{'count'}  = $total;
 			$data->{'kiriban'}->{'booth'}  = $booth+0;
 			$data->{'kiriban'}->{'time'}   = time;
-			$result = 1;
+			$result = "*";
 		}
 		
 		flock( CNT, 2 ); # 書き込みロック

@@ -8,7 +8,7 @@
 (function() {
 
 var count = {};
-var indiv = {};
+var indiv = new Array();
 
 $(function() {
 	getCountData();
@@ -26,17 +26,9 @@ function getCountData()
 			count = data;
 		},
 		complete: function() {
-			analyzeCountData();
+			printAnalysisResult();
 		}
 	});
-}
-
-function analyzeCountData()
-{
-	$.each(count.stati, function(booth, val) {
-		indiv[booth] = Math.round(val/count.total*100);
-	});
-	printAnalysisResult();
 }
 
 function printAnalysisResult()
@@ -44,7 +36,15 @@ function printAnalysisResult()
 	$("#result").append("<h2>合計うめぇ～な数</h2>\n"+"<p>"+count.total+"</p>");
 	$.each(count.stati, function(booth, val) {
 		var rate = Math.round(val/count.total*100);
-		$("#indiv").append("<tr><td>"+booth+"</td><td>"+val+"</td><td>"+rate+"%</td><td><div style=\"width:"+rate+"%;background-color:red;\">&nbsp;</div></td></tr>");
+		indiv.push({ "booth": booth, "val": val, "rate": rate });
+	});
+	
+	indiv.sort(function(a, b) {
+		return ( a.val < b.val ? 1 : -1);
+	});
+	
+	$.each(indiv, function(i, data) {
+		$("#indiv").append("<tr><td>"+data.booth+"</td><td>"+data.val+"</td><td>"+data.rate+"%</td><td><div style=\"width:"+data.rate+"%;background-color:red;\">&nbsp;</div></td></tr>");
 	});
 }
 

@@ -58,7 +58,7 @@ $(function () {
 	
 	printNowloading();
 	getCountLoop();
-	printToolbar();
+	//printToolbar();
 	
 });
 
