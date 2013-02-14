@@ -46,9 +46,8 @@ sub main
 	# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
 	if ( open( CNT, "+< ./count.json" ) )
 	{
-		flock( CNT, 1 ); # 読み込みロック
+		flock( CNT, 2 ); # 読み込みロック
 		$_ = <CNT>; # ファイルの1行目を取得(というか1行目にしか書かれてないし…)
-		flock( CNT, 8 ); # ロック解除
 		
 		# 既存データを読み込む
 		$data  = decode_json($_);
@@ -67,7 +66,6 @@ sub main
 			$result = "*";
 		}
 		
-		flock( CNT, 2 ); # 書き込みロック
 		seek( CNT, 0, 0 ); # 先頭
 		print CNT encode_json($data); # データの書き出し
 		truncate( CNT, tell(CNT) ); # 削る(知らなかった…)
