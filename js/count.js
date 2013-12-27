@@ -72,7 +72,7 @@ $(function () {
 	keepRatio(); // ratio.js
 	
 	printNowloading();
-	getCountLoop();
+	getCountData();
 	checkAnimationQueue();
 	printToolbar();
 	
@@ -80,13 +80,13 @@ $(function () {
 
 //========================================================================================
 //
-//	カウント値観測関数 - getCountLoop
+//	カウント値観測関数 - getCountData
 //
 // -----------------------------------------------------------------------------
 //	param	なし
 //	return	なし
 //========================================================================================
-function getCountLoop()
+function getCountData()
 {
 	$.ajax({
 		
@@ -94,50 +94,27 @@ function getCountLoop()
 		url: "./count.json",
 		cache: false, //キャッシュさせない
 		
-		success: function (data) {
+		success: function(data) {
 			// 初回起動時はとにかく現在のカウント値を取得
 			if ( now.total == -1 ) {
 				now = data;
 				$("#count").text(now.total);
 			}
-
-			// ボタンが押されていればアニメーション待機させる
+			// キリ番には反応が早い
+			if ( now.kiriban.time < data.kiriban.time ) {
+				$("#aspect").stop();
+				animationQueue.unshift({"count": data.kiriban.count, "booth": data.kiriban.booth, "kiriban": true});
+			}
+			// 何かボタンが押されていればアニメーションキューに挿入
 			$.each(data.history, function() {
 				if ( now.total < this.count ) {
 					animationQueue.push(this);
 				}
 			});
-			/*
-			// カウント値が増加
-			if ( data.total > now.total ) {
-				// アニメーション中でなければうめぇな～！
-				if ( aFlag == 0 ) {
-					// キリ番のアニメーション
-					if ( now.kiriban.time < data.kiriban.time ) {
-						animateKiriban( data.kiriban.count, data.kiriban.booth );
-					}
-					// 通常のアニメーション
-					else if ( now.total < data.total ) {
-						animateNormal( data.total, data.booth );
-					}
-				}
-				else if ( aFlag == 1 ) {
-
-				}
-			}
-			// 早々無いけど現在のデータと取得してきたデータがあっていなければ数値を変更
-			else if ( data.total != now.total ) {
-				animateCountup( data.total );
-			}
-			*/
 			// 取得してきたデータを現在のデータと置き換える
 			now = data;
-		},
-		// 通信が完了したら１秒後に自分自身を呼び出す
-		complete: function () {
-			//setTimeout(getCountLoop, 1000);
 		}
-		
+
 	});
 }
 
@@ -150,16 +127,27 @@ function getCountLoop()
 //	return	なし
 //========================================================================================
 function checkAnimationQueue() {
-	if ( aFlag == 0 && animationQueue.length != 0 ) {
-		var a = animationQueue.shift();
-		animateNormal(a.count, a.booth);
-		console.dir(animationQueue);
+	// アニメーションしてなかったら
+	if ( aFlag == 0 ) {
+		// アニメーション待機キューがあれば
+		if ( animationQueue.length != 0 ) {
+			var a = animationQueue.shift();
+			if (a.kiriban) {
+				animateKiriban(a.count, a.booth);
+			}
+			else {
+				animateNormal(a.count, a.booth);
+			}
+			console.dir(animationQueue);
+		}
+		// もしアニメーション待機しているものがなければ
+		else {
+			// jsonの様子を見に行く
+			getCountData();
+		}
 	}
-	else if ( aFlag == 0 && animationQueue.length == 0 ) {
-		// もしアニメーション待機しているものがなければjsonの様子を見に行く
-		getCountLoop();
-	}
-	setTimeout(checkAnimationQueue, 1000);
+	// 1.5秒毎に自分自身を呼び出す
+	setTimeout(checkAnimationQueue, 1500);
 }
 
 //========================================================================================
@@ -220,6 +208,12 @@ function animateNormal(count, booth)
 		})
 		.delay(4500)
 		
+		// 突然ですがここでjsonを取得します（次のアニメーションの準備）
+		.queue( function() {
+			getCountData();
+			$(this).dequeue();
+		})
+
 		// 音を鳴らす
 		.queue( function() {
 			sound.load();

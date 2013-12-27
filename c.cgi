@@ -53,28 +53,30 @@ sub main
 		$data  = decode_json($_);
 		# トータルカウント値を加算
 		$total = ++$data->{'total'};
-		# 押されたボタンの情報とか
-		my %count = (
-			"count" => $total+0,
-			"booth" => $booth+0
-		);
-		# 押された履歴に追加する
-		push(@{$data->{'history'}}, \%count);
-		# ついでに10個を超える履歴は削除
-		if ($#{$data->{'history'}} >= 10 ) {
-			shift(@{$data->{'history'}});
-		}
-
-		# ブースごとのカウント値を加算
-		$data->{'stati'}->{$booth}++;
 		
-		# キリ番の時に情報を書き込む
+		# キリ番の時にはキリ番専用のObjectに情報を書き込む
 		if ( judgeKiriban($total) ) {
 			$data->{'kiriban'}->{'count'}  = $total;
 			$data->{'kiriban'}->{'booth'}  = $booth+0;
 			$data->{'kiriban'}->{'time'}   = time;
 			$result = "*";
 		}
+		else {
+			# 押されたボタンの情報とか
+			my %count = (
+				"count" => $total+0,
+				"booth" => $booth+0
+			);
+			# 押された履歴に追加する
+			push(@{$data->{'history'}}, \%count);
+			# ついでに10個を超える履歴は削除
+			if ($#{$data->{'history'}} >= 10 ) {
+				shift(@{$data->{'history'}});
+			}
+		}
+
+		# ブースごとのカウント値を加算
+		$data->{'stat'}->{$booth}++;
 		
 		seek( CNT, 0, 0 ); # 先頭
 		print CNT encode_json($data); # データの書き出し
