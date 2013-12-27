@@ -42,6 +42,21 @@ products[17] = new Product("./img/product/17.png", "./se/17.ogg");	// 雄町米�
 var eventsound = new Audio("./se/event.ogg");
 eventsound.load();
 
+// アニメーションフラグ
+var aFlag = 0;
+// 現在のカウントデータ
+var now = {
+	total: -1,		// カウント合計値
+	history: [],	// 押された記録（過去10回）
+	kiriban: {		// 最終キリ番の設定データ
+		count: 0,	// キリ番の値
+		booth: 0,	// ブース番号
+		time : 0,	// キリ番イベントが発生した時間
+	},
+};
+// アニメーション待機キュー
+var animationQueue = new Array();
+
 // jQuery的処理はここから
 $(function () {
 	
@@ -58,25 +73,10 @@ $(function () {
 	
 	printNowloading();
 	getCountLoop();
-	//printToolbar();
+	checkAnimationQueue();
+	printToolbar();
 	
 });
-
-// アニメーションフラグ
-var aFlag = 0;
-// 現在のカウントデータ
-var now = {
-	total: -1,		// カウント合計値
-	booth: 0,		// ブース番号
-	
-	kiriban: {		// 最終キリ番の設定データ
-		count: 0,	// キリ番の値
-		booth: 0,	// ブース番号
-		time : 0,	// キリ番イベントが発生した時間
-	},
-};
-// 最後にアニメーションを行ったブースの記憶用
-var lastbooth = 0;
 
 //========================================================================================
 //
@@ -100,6 +100,14 @@ function getCountLoop()
 				now = data;
 				$("#count").text(now.total);
 			}
+
+			// ボタンが押されていればアニメーション待機させる
+			$.each(data.history, function() {
+				if ( now.total < this.count ) {
+					animationQueue.push(this);
+				}
+			});
+			/*
 			// カウント値が増加
 			if ( data.total > now.total ) {
 				// アニメーション中でなければうめぇな～！
@@ -110,28 +118,48 @@ function getCountLoop()
 					}
 					// 通常のアニメーション
 					else if ( now.total < data.total ) {
-						// 最後にアニメーションしたブースと一緒でなければ通常のアニメーション
-						if ( lastbooth != data.booth ) {
-							animateNormal( data.total, data.booth );
-						}
-						// 最後にアニメーションしたブースと一緒であればカウントアップのみ
-						else {
-							animateCountup( data.total );
-						}
+						animateNormal( data.total, data.booth );
 					}
 				}
+				else if ( aFlag == 1 ) {
+
+				}
 			}
+			// 早々無いけど現在のデータと取得してきたデータがあっていなければ数値を変更
 			else if ( data.total != now.total ) {
 				animateCountup( data.total );
 			}
+			*/
+			// 取得してきたデータを現在のデータと置き換える
 			now = data;
 		},
 		// 通信が完了したら１秒後に自分自身を呼び出す
 		complete: function () {
-			setTimeout(getCountLoop, 1000);
+			//setTimeout(getCountLoop, 1000);
 		}
 		
 	});
+}
+
+//========================================================================================
+//
+//	アニメーション待機チェック - checkAnimationQueue
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
+function checkAnimationQueue() {
+	if ( aFlag == 0 && animationQueue.length != 0 ) {
+		var a = animationQueue.shift();
+		animateNormal(a.count, a.booth);
+		console.dir(animationQueue);
+	}
+	else if ( aFlag == 0 && animationQueue.length == 0 ) {
+		// もしアニメーション待機しているものがなければjsonの様子を見に行く
+		getCountLoop();
+	}
+	setTimeout(checkAnimationQueue, 1000);
 }
 
 //========================================================================================
@@ -164,69 +192,69 @@ function animateNormal(count, booth)
 	// サウンドのロード
 	var sound = products[booth].sound;
 	
-	// ここからアニメーション処理
+	// ここからアニメーション処理(ひどい)
 	$("#aspect")
 		// カウンター非表示
-		.queue( function (next) {
+		.queue( function() {
 			$("#countbox").transition({opacity: 0}, 500, 'ease');
 			$("#scrollbox").transition({opacity: 0}, 500, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		// 画像アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#transobj").transition({y: center.y, x: center.x, rotate: 365}, 800, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		.delay(500)
 		// キャラ出現アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#baloon").transition({opacity: 1.0, rotate: -15}, 400);
 			$("#character").transition({opacity: 1.0}, 800);
-			next();
+			$(this).dequeue();
 		})
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			sound.load();
 			sound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(4500)
 		
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			sound.load();
 			sound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(3500)
 		
 		// 画像アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#transobj").transition({y: -center.y, x: -center.x, rotate: -365}, 700, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		// キャラ消失アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#character").transition({opacity: 0}, 700);
 			$("#baloon").transition({opacity: 0}, 700).transition({rotate: 0},0);
-			next();
+			$(this).dequeue();
 		})
-		.delay(700)
 		
 		// カウンター表示
-		.queue( function (next) {
-			$("#count").text(now.total);
-			$("#countbox").transition({opacity: 1}, 500, 'ease');
-			$("#scrollbox").transition({opacity: 1}, 500, 'ease');
-			next();
+		.queue( function() {
+			// もしアニメーションを待機している物があればカウンターを非表示のまま終了
+			if ( animationQueue.length == 0 ) {
+				$("#count").text(now.total);
+				$("#countbox").transition({opacity: 1}, 500, 'ease');
+				$("#scrollbox").transition({opacity: 1}, 500, 'ease');
+			}
+			$(this).dequeue();
 		})
-		.delay(500)
-		
 		// おわり
-		.queue( function (next) {
+		.queue( function() {
+			// アニメーションフラグをへし折る
 			aFlag = 0;
-			lastbooth = booth;
-			next();
+			$(this).dequeue();
 		});
 	
 }
@@ -242,15 +270,15 @@ function animateNormal(count, booth)
 function animateCountup(count)
 {
 	$("div#count")
-		.queue( function (next) {
+		.queue( function() {
 			$(this).transition( {opacity: 0, scale: 1.2}, 500, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		.delay(500)
-		.queue( function (next) {
+		.queue( function() {
 			$(this).text(count);
 			$(this).transition( {opacity: 1, scale: 1.0}, 500, 'ease');
-			next();
+			$(this).dequeue();
 		});
 	
 }
@@ -288,90 +316,90 @@ function animateKiriban(count, booth)
 	// ここからアニメーション処理
 	$("#aspect")
 		// カウンター非表示
-		.queue( function (next) {
+		.queue( function() {
 			$("#countbox").transition({opacity: 0}, 500, 'ease');
 			$("#scrollbox").transition({opacity: 0}, 500, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		// 画像アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#transobj").transition({y: center.y, x: center.x, rotate: 365}, 800, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		.delay(500)
 		// キャラ出現アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#baloon").transition({opacity: 1.0, rotate: -15}, 400);
 			$("#character").transition({opacity: 1.0}, 800);
 			$("#stamp").transition({rotate: 0}, 0).transition({opacity: 1.0, rotate: -355}, 700);
-			next();
+			$(this).dequeue();
 		})
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			eventsound.load();
 			eventsound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(4500)
 		
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			sound.load();
 			sound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(3500)
 		
 		// 回転させよう
-		.queue( function (next) {
+		.queue( function() {
 			$("#stamp").transition({rotate: 365}, 700);
-			next();
+			$(this).dequeue();
 		})
 		
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			eventsound.load();
 			eventsound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(4500)
 		
 		// 音を鳴らす
-		.queue( function (next) {
+		.queue( function() {
 			sound.load();
 			sound.play();
-			next();
+			$(this).dequeue();
 		})
 		.delay(3500)
 		
 		// 画像アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#transobj").transition({y: -center.y, x: -center.x, rotate: -365}, 700, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		// キャラ消失アニメーション
-		.queue( function (next) {
+		.queue( function() {
 			$("#character").transition({opacity: 0}, 700);
 			$("#baloon").transition({opacity: 0}, 700).transition({rotate: 0},0);
 			$("#stamp").transition({opacity: 0}, 700);
-			next();
+			$(this).dequeue();
 		})
 		.delay(700)
 		
 		// カウンター表示
-		.queue( function (next) {
+		.queue( function() {
 			$("#count").text(now.total);
 			$("#countbox").transition({opacity: 1}, 500, 'ease');
 			$("#scrollbox").transition({opacity: 1}, 500, 'ease');
-			next();
+			$(this).dequeue();
 		})
 		.delay(500)
 		
 		// おわり
-		.queue( function (next) {
-			aFlag = 0;			// アニメーション中のフラグを解除
-			lastbooth = booth;	// 最後にアニメーションしたブースを記憶
-			next();
+		.queue( function() {
+			// アニメーションフラグをへし折る
+			aFlag = 0;
+			$(this).dequeue();
 		});
 	
 }
@@ -390,7 +418,7 @@ function printNowloading()
 	
 	$("#start").click( function() {
 		$("#loading").hide();
-		enterFullscreen();
+		//enterFullscreen();
 	});
 	
 	// フルスクリーン化用関数

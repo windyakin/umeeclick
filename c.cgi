@@ -53,8 +53,18 @@ sub main
 		$data  = decode_json($_);
 		# トータルカウント値を加算
 		$total = ++$data->{'total'};
-		# ブース情報を書き込み
-		$data->{'booth'} = $booth+0;
+		# 押されたボタンの情報とか
+		my %count = (
+			"count" => $total+0,
+			"booth" => $booth+0
+		);
+		# 押された履歴に追加する
+		push(@{$data->{'history'}}, \%count);
+		# ついでに10個を超える履歴は削除
+		if ($#{$data->{'history'}} >= 10 ) {
+			shift(@{$data->{'history'}});
+		}
+
 		# ブースごとのカウント値を加算
 		$data->{'stati'}->{$booth}++;
 		
