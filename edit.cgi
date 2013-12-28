@@ -23,12 +23,12 @@ sub main
 	print "Content-type: text/html; charset=UTF-8\n\n";
 	
 	if ( $ENV{'PATH_INFO'} eq "/kiriban" ) {
-		$mode->{en} = "kiriban";
-		$mode->{ja} = "キリ番";
+		$mode->{'en'} = "kiriban";
+		$mode->{'ja'} = "キリ番";
 	}
 	elsif ( $ENV{'PATH_INFO'} eq "/telop") {
-		$mode->{en} = "telop";
-		$mode->{ja} = "テロップ";
+		$mode->{'en'} = "telop";
+		$mode->{'ja'} = "テロップ";
 	}
 	else {
 		return 0;
@@ -39,20 +39,21 @@ sub main
 	print '<head>'."\n";
 	print ' <meta charset="UTF-8">'."\n";
 	print ' <title>ファイル編集 - うめぇ～な！クリックシステム</title>'."\n";
+	print ' <link rel="stylesheet" href="/css/index.css">'."\n";
 	print '</head>'."\n";
 	print '<body>'."\n";
-	if ( open(SETTING, "+<", $mode->{en}.".txt") ) {
+	if ( open(SETTING, "+<", $mode->{'en'}.".txt") ) {
 		binmode(SETTING);
-		print "<h1>".$mode->{ja}."設定ファイル編集</h1>"."\n";
-		print "<p>".$mode->{ja}."を編集します。</p>"."\n";
+		print "<h1>".$mode->{'ja'}."設定ファイル編集</h1>"."\n";
+		print "<p>".$mode->{'ja'}."を編集します。</p>"."\n";
 		if ( $query->param('text') ne "" ) {
 			seek( SETTING, 0, 0 ); # 先頭
 			print SETTING decode('UTF-8',$query->param('text'));
 			truncate( SETTING, tell(SETTING) );
 			print "<p>変更しました</p>";
 		}
-		print '<form method="POST" action="../edit.cgi/'.$mode->{en}.'">'."\n";
-		print '<textarea style="width:80%;height:20em;background:#EEFFFF;" name="text">'."\n";
+		print '<form method="POST" action="../edit.cgi/'.$mode->{'en'}.'">'."\n";
+		print '<textarea style="width:80%;height:20em;background:#EEFFFF;font-family:monospace;" name="text">'."\n";
 		seek( SETTING, 0, 0 ); # 先頭
 		while(<SETTING>) { print $_; }
 		print "</textarea><br>\n";
