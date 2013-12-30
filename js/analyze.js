@@ -34,7 +34,7 @@ function getCountData()
 
 function printAnalysisResult()
 {
-	$("#result").append("<h2>合計うめぇ～な数</h2>\n"+"<p>"+count.total+"</p>");
+	printTotalCount($("#total"), 0, count.total);
 	$.each(count.stat, function(booth, val) {
 		var rate = Math.round(val/count.total*10000)/100;
 		indiv.push({ "booth": booth, "val": val, "rate": rate });
@@ -43,11 +43,25 @@ function printAnalysisResult()
 	indiv.sort(function(a, b) {
 		return ( a.val < b.val ? 1 : -1);
 	});
-	
+
 	$.each(indiv, function(i, data) {
-		$("#all").append('<span style="display:inline-block;width:'+data.rate+'%;background:'+color[(i%color.length)]+';">&nbsp;</span>');
-		$("#indiv").append("<tr><td>"+data.booth+"</td><td>"+data.val+"</td><td>"+data.rate+"%</td><td><div style=\"width:"+data.rate+"%;background-color:red;\">&nbsp;</div></td></tr>");
+		var width = data.rate/indiv[0].rate*100;
+		$("#totalbar tr").append('<td style="width:'+data.rate+'%;height:20px;background-color:'+color[(i%color.length)]+'"></td>');
+		$("#totalbar").animate({"width": "80%"}, 1000, "easeOutBounce");
+		$("#indiv").append("<tr><td>"+(i+1)+"</td><td>"+data.booth+"</td><td>"+data.val+"</td><td>"+data.rate+"%</td><td><div id=\"rate_"+i+"\"style=\"width:0;background-color:"+color[(i%color.length)]+";height:20px;\"></div></td></tr>");
+		$("#rate_"+i).delay(50*i).animate({"width":width+"%"}, 500, "easeOutBounce");
 	});
+}
+
+function printTotalCount( $this, now, total )
+{
+	now += Math.round(total/50);
+	if (now > total) { now = total; }
+	$this.text(now);
+	if ( now < total ) {
+		setTimeout(function(){printTotalCount($this, now, total)}, 10); 
+	}
+	return;
 }
 
 })();

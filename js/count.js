@@ -72,8 +72,7 @@ $(function () {
 	keepRatio(); // ratio.js
 	
 	printNowloading();
-	getCountData();
-	checkAnimationQueue();
+	//getCountData();
 	printToolbar();
 	
 });
@@ -98,7 +97,8 @@ function getCountData()
 			// 初回起動時はとにかく現在のカウント値を取得
 			if ( now.total == -1 ) {
 				now = data;
-				$("#count").text(now.total);
+				printTotalCount($("#count"), 0, now.total);
+				//$("#count").text(now.total);
 			}
 			// キリ番には反応が早い
 			if ( now.kiriban.time < data.kiriban.time ) {
@@ -238,7 +238,7 @@ function animateNormal(count, booth)
 		.queue( function() {
 			// もしアニメーションを待機している物があればカウンターを非表示のまま終了
 			if ( animationQueue.length == 0 ) {
-				$("#count").text(now.total);
+				$("#count").text(count);
 				$("#countbox").transition({opacity: 1}, 500, 'ease');
 				$("#scrollbox").transition({opacity: 1}, 500, 'ease');
 			}
@@ -382,7 +382,7 @@ function animateKiriban(count, booth)
 		
 		// カウンター表示
 		.queue( function() {
-			$("#count").text(now.total);
+			$("#count").text(count);
 			$("#countbox").transition({opacity: 1}, 500, 'ease');
 			$("#scrollbox").transition({opacity: 1}, 500, 'ease');
 			$(this).dequeue();
@@ -412,6 +412,7 @@ function printNowloading()
 	
 	$("#start").click( function() {
 		$("#loading").hide();
+		checkAnimationQueue();
 		//enterFullscreen();
 	});
 	
@@ -455,6 +456,17 @@ function getCenter()
 		y: img.w + draw.h/2 - img.h/2,
 		x: draw.w/2 - img.w/2
 	};
+}
+
+function printTotalCount( $this, now, total )
+{
+	now += Math.round(total/50);
+	if (now > total) { now = total; }
+	$this.text(now);
+	if ( now < total ) {
+		setTimeout(function(){printTotalCount($this, now, total)}, 10); 
+	}
+	return;
 }
 
 //========================================================================================

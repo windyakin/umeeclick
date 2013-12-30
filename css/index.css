@@ -14,3 +14,13 @@ dl dt {
 dl dd {
 	margin-bottom: 1em;
 }
+
+/* analyze用 */
+#count {
+	margin-top: 0;
+	font-size: 2em;
+}
+table#totalbar {
+	border-collapse:collapse;
+	border:0px;
+}
