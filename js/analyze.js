@@ -10,10 +10,37 @@
 var count = {};
 var indiv = new Array();
 var color = [ "#3498db", "#9b59b6", "#e67e22", "#e74c3c", "#95a5a6", "#1abc9c" ];
+// 商品のクラス
+var Product = function(imageurl, soundurl) {
+	this.image    = imageurl;
+	this.soundurl = soundurl;
+	this.sound = new Audio(this.soundurl);
+	this.sound.load();
+};
+var products = {};
 
 $(function() {
 	getCountData();
+	getProductList();
 });
+
+function getProductList()
+{
+	$.ajax({
+
+		dataType: "json",
+		url: "./products.json",
+		cache: false,
+
+		success: function(data) {
+			$.each( data.products, function(i, product) {
+				console.dir(product);
+				products[i+1] = new Product( product.image, product.sound );
+				console.log( product.name + " success!");
+			});
+		}
+	});
+}
 
 function getCountData()
 {

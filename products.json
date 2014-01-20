@@ -1,0 +1,34 @@
+{
+	"products": [
+		{
+			"image": "./img/product/01.png",
+			"sound": "./se/01.ogg",
+			"name" : "生クリーム大福"
+		},
+		{
+			"image": "./img/product/02.png",
+			"sound": "./se/02.ogg",
+			"name" : "蒜山ジャージー贅沢ヨーグルト"
+		},
+		{
+			"image": "./img/product/03.png",
+			"sound": "./se/03.ogg",
+			"name" : "きなこボール"
+		},
+		{
+			"image": "./img/product/04.png",
+			"sound": "./se/04.ogg",
+			"name" : "きなこボール"
+		},
+		{
+			"image": "./img/product/05.png",
+			"sound": "./se/05.ogg",
+			"name" : "ままかりっ子"
+		},
+		{
+			"image": "./img/product/06.png",
+			"sound": "./se/06.ogg",
+			"name" : "ゆばこん"
+		}
+	]
+}
