@@ -13,10 +13,11 @@ var color = [ "#3498db", "#9b59b6", "#e67e22", "#e74c3c", "#95a5a6", "#1abc9c" ]
 // 商品のクラス
 var Product = function(num, name) {
 	var booth = ("0" + num).slice(-2); // ひどい
-	this.image    = "./img/products/"+booth+".png";
-	this.soundurl = "./se/"+booth+".ogg";
-	this.sound = new Audio(this.soundurl);
+	this.image    = "./products/img/"+booth+".png";
+	this.soundurl = "./products/sound/"+booth+".ogg";
+	this.sound    = new Audio(this.soundurl);
 	this.sound.load();
+	this.name     = name;
 };
 var products = {};
 
@@ -42,16 +43,18 @@ $(function() {
 function getProductList()
 {
 	$.ajax({
-
-		dataType: "json",
-		url: "./data/products.json",
+		dataType: "text",
+		url: "./data/products.txt",
 		cache: false,
-
-		success: function(data) {
-			$.each( data.products, function(i, product) {
-				products[i+1] = new Product( product.image, product.sound );
-			});
-		}
+	})
+	.success(function(data) {
+		var product = data.split(/\r?\n/);
+		$.each( product, function(i, product) {
+			if ( product == "" ) return; // 末尾の空行は無視する(途中に入れられたらどうしようもないけど)
+			products[i+1] = new Product( i+1, product );
+		});
+	})
+	.complete(function(){
 	});
 }
 

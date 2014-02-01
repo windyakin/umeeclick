@@ -26,9 +26,13 @@ sub main
 		$mode->{'en'} = "kiriban";
 		$mode->{'ja'} = "キリ番";
 	}
-	elsif ( $ENV{'PATH_INFO'} eq "/telop") {
+	elsif ( $ENV{'PATH_INFO'} eq "/telop" ) {
 		$mode->{'en'} = "telop";
 		$mode->{'ja'} = "テロップ";
+	}
+	elsif ( $ENV{'PATH_INFO'} eq "/products" ) {
+		$mode->{'en'} = "products";
+		$mode->{'ja'} = "製品名一覧";
 	}
 	else {
 		return 0;
@@ -41,7 +45,7 @@ sub main
 	print ' <title>ファイル編集 - うめぇ～な！クリックシステム</title>'."\n";
 	print ' <link rel="stylesheet" href="/css/index.css">'."\n";
 	print '</head>'."\n";
-	print '<body>'."\n";
+	print '<body onload="sync_scroll(document.getElementById(\'te\'))">'."\n";
 	if ( open(SETTING, "+<", "./data/".$mode->{'en'}.".txt") ) {
 		binmode(SETTING);
 		print "<h1>".$mode->{'ja'}."設定ファイル編集</h1>"."\n";

@@ -11,32 +11,17 @@
 (function() {
 
 // 商品のクラス
-var Product = function(imageurl, soundurl) {
-	this.image    = imageurl;
-	this.soundurl = soundurl;
-	this.sound = new Audio(this.soundurl);
+var Product = function(num, name) {
+	var booth = ("0" + num).slice(-2); // ひどい
+	this.image    = "./products/img/"+booth+".png";
+	this.soundurl = "./products/sound/"+booth+".ogg";
+	this.sound    = new Audio(this.soundurl);
 	this.sound.load();
+	this.name     = name;
 };
 
 // 商品ごとの画像と音声の設定
 var products = {};
-products[1]  = new Product("./products/img/01.png", "./products/sound/01.ogg");	// 泡々酒ストライプ
-products[2]  = new Product("./products/img/02.png", "./products/sound/02.ogg");	// おかやま米野菜
-products[3]  = new Product("./products/img/03.png", "./products/sound/03.ogg");	// 津山ビール
-products[4]  = new Product("./products/img/04.png", "./products/sound/04.ogg");	// SOYPORK
-products[5]  = new Product("./products/img/05.png", "./products/sound/05.ogg");	// 醍醐桜ジャージー牛乳
-products[6]  = new Product("./products/img/06.png", "./products/sound/06.ogg");	// 踊る！たこ焼き器
-products[7]  = new Product("./products/img/07.png", "./products/sound/07.ogg");	// 姫とうがらし藁綯い
-products[8]  = new Product("./products/img/08.png", "./products/sound/08.ogg");	// 黒々炒り豆
-products[9]  = new Product("./products/img/09.png", "./products/sound/09.ogg");	// FOODACTION美作
-products[10] = new Product("./products/img/10.png", "./products/sound/10.ogg");	// 真庭ブランド
-products[11] = new Product("./products/img/11.png", "./products/sound/11.ogg");	// 蒜山ジャージーヨーグルト
-products[12] = new Product("./products/img/12.png", "./products/sound/12.ogg");	// 紅酢
-products[13] = new Product("./products/img/13.png", "./products/sound/13.ogg");	// マグロの鉄太郎
-products[14] = new Product("./products/img/14.png", "./products/sound/14.ogg");	// 蒟蒻名人 ゆばこん
-products[15] = new Product("./products/img/15.png", "./products/sound/15.ogg");	// 倉敷ソーセージ
-products[16] = new Product("./products/img/16.png", "./products/sound/16.ogg");	// どらせん作州黒餡
-products[17] = new Product("./products/img/17.png", "./products/sound/17.ogg");	// 雄町米おかき
 
 // キリ番音声
 var eventsound = new Audio("./products/sound/event.ogg");
@@ -61,17 +46,67 @@ var animationQueue = new Array();
 $(function () {
 	
 	{
+		initialized();
 	}
-	
-	// 読み込んだ画像のリサイズ・再配置
-	keepRatio(); // ratio.js
-	
-	printNowloading();
-	//getCountData();
-	printToolbar();
-	
 });
 
+//========================================================================================
+//
+//	初期化 - initialized
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
+function initialized()
+{
+	getProductList();
+	{
+		$("#character").transition({opacity: 0}, 0);
+		$("#baloon").transition({opacity: 0}, 0);
+		$("#stamp").transition({opacity: 0}, 0);
+		$("#start").transition({opacity: 0}, 0);
+	}
+	keepRatio(); // raito.js
+	printToolbar(); // debug
+	printNowloading();
+
+}
+
+//========================================================================================
+//
+//	スタート画面描画関連関数 - printNowloading
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
+function printNowloading()
+{
+
+	$("#start").delay(500).transition({opacity: 1}, 500);
+	
+	$("#start").click( function() {
+		$("#loading").hide();
+		checkAnimationQueue();
+		//enterFullscreen();
+	});
+	
+	// フルスクリーン化用関数
+	function enterFullscreen()
+	{
+		var x = document.getElementById("aspect");
+		if (x.webkitRequestFullScreen) {
+			x.webkitRequestFullScreen();
+		}
+		else if (x.mozRequestFullScreen) {
+			x.mozRequestFullScreen();
+		}
+		else {
+			x.requestFullScreen();
+		}
+	}
+}
 
 //========================================================================================
 //
@@ -84,35 +119,65 @@ $(function () {
 function getCountData()
 {
 	$.ajax({
-		
 		dataType: "json",
 		url: "./data/count.json",
 		cache: false, //キャッシュさせない
-		
-		success: function(data) {
-			// 初回起動時はとにかく現在のカウント値を取得
-			if ( now.total == -1 ) {
-				now = data;
-				printTotalCount($("#count"), 0, now.total);
-				//$("#count").text(now.total);
-			}
-			// キリ番には反応が早い
-			if ( now.kiriban.time < data.kiriban.time ) {
-				$("#aspect").stop();
-				animationQueue.unshift({"count": data.kiriban.count, "booth": data.kiriban.booth, "kiriban": true});
-			}
-			// 何かボタンが押されていればアニメーションキューに挿入
-			$.each(data.history, function() {
-				if ( now.total < this.count ) {
-					animationQueue.push(this);
-				}
-			});
-			// 取得してきたデータを現在のデータと置き換える
+	})
+	.success(function(data){
+		// 初回起動時はとにかく現在のカウント値を取得
+		if ( now.total == -1 ) {
 			now = data;
+			printTotalCount($("#count"), 0, now.total);
+			//$("#count").text(now.total);
 		}
-
+		// キリ番には反応が早い
+		if ( now.kiriban.time < data.kiriban.time ) {
+			$("#aspect").stop();
+			animationQueue.unshift({"count": data.kiriban.count, "booth": data.kiriban.booth, "kiriban": true});
+		}
+		// 何かボタンが押されていればアニメーションキューに挿入
+		$.each(data.history, function() {
+			if ( now.total < this.count ) {
+				animationQueue.push(this);
+			}
+		});
+		// 取得してきたデータを現在のデータと置き換える
+		now = data;
 	});
 }
+
+//========================================================================================
+//
+//	製品一覧取得 - getProductList
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
+function getProductList()
+{
+	$.ajax({
+		dataType: "text",
+		url: "./data/products.txt",
+		cache: false,
+	})
+	.success(function(data) {
+		var product = data.split(/\r?\n/);
+		$.each( product, function(i, product) {
+			// 末尾の空行は無視する(途中に入れられたらどうしようもないけど)
+			if ( product == "" ) return;
+			// 突っ込みます
+			products[i+1] = new Product( i+1, product );
+		});
+	})
+	.complete(function(){
+		$.each(products, function (id, p) {
+			$("<button>").text(id).appendTo("#toolbar");
+		});
+	});
+	return;
+}
+
 
 //========================================================================================
 //
@@ -397,48 +462,6 @@ function animateKiriban(count, booth)
 	
 }
 
-//========================================================================================
-//
-//	スタート画面描画関連関数 - printNowloading
-//
-// -----------------------------------------------------------------------------
-//	param	なし
-//	return	なし
-//========================================================================================
-function printNowloading()
-{
-
-	// initialize
-	{
-		$("#character").transition({opacity: 0}, 0);
-		$("#baloon").transition({opacity: 0}, 0);
-		$("#stamp").transition({opacity: 0}, 0);
-		$("#start").transition({opacity: 0}, 0);
-	}
-
-	$("#start").delay(500).transition({opacity: 1}, 500);
-	
-	$("#start").click( function() {
-		$("#loading").hide();
-		checkAnimationQueue();
-		//enterFullscreen();
-	});
-	
-	// フルスクリーン化用関数
-	function enterFullscreen()
-	{
-		var x = document.getElementById("aspect");
-		if (x.webkitRequestFullScreen) {
-			x.webkitRequestFullScreen();
-		}
-		else if (x.mozRequestFullScreen) {
-			x.mozRequestFullScreen();
-		}
-		else {
-			x.requestFullScreen();
-		}
-	}
-}
 
 //========================================================================================
 //
@@ -496,11 +519,7 @@ function printTotalCount( $this, now, total )
 //	return	なし
 //========================================================================================
 function printToolbar()
-{
-	$.each(products, function (id, p) {
-		$("<button>").text(id).appendTo("#toolbar");
-	});
-	
+{	
 	// ツールバーの出現
 	$(window).mousemove(function (e) {
 		var wsh = document.documentElement.clientHeight;
@@ -511,7 +530,8 @@ function printToolbar()
 			$("div#toolbar").slideUp();
 		}
 	});
-	$("#toolbar button").click(function(){
+	$("#toolbar").on('click', "button", function(){
+		console.log("ou");
 		$.get("./c.cgi?"+$(this).text());
 	});
 }
