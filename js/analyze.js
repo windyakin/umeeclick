@@ -14,7 +14,7 @@ var color = [ "#3498db", "#9b59b6", "#e67e22", "#e74c3c", "#95a5a6", "#1abc9c" ]
 var Product = function(num, name) {
 	var booth = ("0" + num).slice(-2); // ひどい
 	this.image    = "./products/img/"+booth+".png";
-	this.soundurl = "./products/sound/"+booth+".ogg";
+	this.soundurl = "./products/sound/"+booth+".mp3";
 	this.sound    = new Audio(this.soundurl);
 	this.sound.load();
 	this.name     = name;
