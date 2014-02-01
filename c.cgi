@@ -13,17 +13,21 @@
 
 use strict;
 use warnings;
-#use CGI::Carp qw(fatalsToBrowser); #debug
+use CGI::Carp qw(fatalsToBrowser); #debug
 use lib './lib';
 use JSON;
+use File::Copy 'copy';
 
 # CGIの実行結果を終了コードとする
 exit(main());
 
 sub main
 {
-	# debug start
-	if ( $ARGV[0] !~ /^\d+$/ ) {
+	if ( $ARGV[0] eq "r" ) {
+		resetCounter();
+		return 0;
+	}
+	elsif ( $ARGV[0] !~ /^\d+$/ ) {
 		print 'c.cgi - (c)2012 windyakin.'."\n";
 		print 'ブース番号をつけてアクセスすることで，カウントを集計します。'."\n";
 		print "\n";
@@ -33,13 +37,12 @@ sub main
 		print "\n";
 		print '[補足]'."\n";
 		print '現在のカウント値は ./count.json に保存されています。'."\n";
-		print 'カウントのリセットは /c.cgi?r できるようにします(予定)。';
-		exit;
+		print 'カウントのリセットは /c.cgi?r できます。';
+		return 0;
 	}
-	# debug end
 	
 	my $total  = 0;
-	my $booth  = $ARGV[0];
+	my $booth  = sprintf("%d", $ARGV[0]); # 数値として認識させる
 	my $data   = JSON->new->allow_nonref;
 	my $result = "0";
 	
@@ -118,4 +121,43 @@ sub judgeKiriban
 	}
 	
 	return 0;
+}
+
+#------------------------------------------------------------------------------------------------------------
+#
+#	カウンターリセット
+#	-------------------------------------------
+#	@param	なし
+#	@return	なし
+#
+#------------------------------------------------------------------------------------------------------------
+sub resetCounter
+{
+	# 初期化用
+	my $JSON = {
+		"history" => undef,
+		"kiriban" => {
+			"count"  => 0,
+			"time"   => 0,
+			"booth"  => 0
+		},
+		"total"   => 0,
+		"stat"    => undef,
+	};
+	# バックアップを作成
+	if ( !-d "./bak" ) { mkdir "./bak"; }
+	copy "count.json", "bak/".time.".json";
+	# ファイルに書き込む
+	if ( open( CNT, "> ./count.json" ) ) {
+		seek( CNT, 0, 0 ); # 先頭
+		print CNT encode_json($JSON);
+		truncate( CNT, tell(CNT) ); # 削る(知らなかった…)
+		close( CNT ); # クローズと同時にロック解除するはず
+	}
+	# 結果を出力
+	{
+		print "Content-type: text/plain\n\n";
+		print "reseted\n";
+	}
+	return;
 }
