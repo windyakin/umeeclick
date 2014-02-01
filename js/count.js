@@ -531,7 +531,6 @@ function printToolbar()
 		}
 	});
 	$("#toolbar").on('click', "button", function(){
-		console.log("ou");
 		$.get("./c.cgi?"+$(this).text());
 	});
 }
