@@ -145,8 +145,17 @@ sub resetCounter
 		"stat"    => undef,
 	};
 	# バックアップを作成
-	if ( !-d "./bak" ) { mkdir "./bak"; }
-	copy "count.json", "bak/".time.".json";
+	{
+		# ディレクトリを作成
+		if ( !-d "./bak" ) { mkdir "./bak"; }
+		# 同じ名前のファイルが生まれると意味が無いので
+		my $i = 0;
+		my $name = time."_".$i.".json";
+		while ( !-e "./bak/".$name ) {
+			copy "count.json", "bak/".$name;
+			$i++;
+		}
+	}
 	# ファイルに書き込む
 	if ( open( CNT, "> ./count.json" ) ) {
 		seek( CNT, 0, 0 ); # 先頭
