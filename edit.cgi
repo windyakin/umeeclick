@@ -45,7 +45,7 @@ sub main
 	print ' <title>ファイル編集 - うめぇ～な！クリックシステム</title>'."\n";
 	print ' <link rel="stylesheet" href="/css/index.css">'."\n";
 	print '</head>'."\n";
-	print '<body onload="sync_scroll(document.getElementById(\'te\'))">'."\n";
+	print '<body>'."\n";
 	if ( open(SETTING, "+<", "./data/".$mode->{'en'}.".txt") ) {
 		binmode(SETTING);
 		print "<h1>".$mode->{'ja'}."設定ファイル編集</h1>"."\n";
