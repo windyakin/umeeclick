@@ -17,15 +17,15 @@ $(function () {
 	$.ajax({
 		dataType: 'text',
 		url: "./data/telop.txt",
-		success: function(data) {
-			$.each(data.split(/\r?\n/), function(i, str) {
-				if ( str == "" ) return;
-				telop.push(str);
-			});
-		},
-		complete: function() {
-			printTelopLoop(0);
-		}
+	})
+	.success(function(data) {
+		$.each(data.split(/\r?\n/), function(i, str) {
+			if ( str == "" ) return;
+			telop.push(str);
+		});
+	})
+	.complete(function() {
+		printTelopLoop(0);
 	});
 });
 

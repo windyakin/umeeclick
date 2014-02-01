@@ -61,17 +61,15 @@ function getProductList()
 function getCountData()
 {
 	$.ajax({
-		
 		dataType: "json",
 		url: "./data/count.json",
 		cache: false, //キャッシュさせない
-		
-		success: function(data) {
-			count = data;
-		},
-		complete: function() {
-			printAnalysisResult();
-		}
+	})
+	.success(function(data) {
+		count = data;
+	})
+	.complete(function() {
+		printAnalysisResult();
 	});
 }
 
