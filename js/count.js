@@ -20,26 +20,26 @@ var Product = function(imageurl, soundurl) {
 
 // 商品ごとの画像と音声の設定
 var products = {};
-products[1]  = new Product("./img/product/01.png", "./se/01.ogg");	// 泡々酒ストライプ
-products[2]  = new Product("./img/product/02.png", "./se/02.ogg");	// おかやま米野菜
-products[3]  = new Product("./img/product/03.png", "./se/03.ogg");	// 津山ビール
-products[4]  = new Product("./img/product/04.png", "./se/04.ogg");	// SOYPORK
-products[5]  = new Product("./img/product/05.png", "./se/05.ogg");	// 醍醐桜ジャージー牛乳
-products[6]  = new Product("./img/product/06.png", "./se/06.ogg");	// 踊る！たこ焼き器
-products[7]  = new Product("./img/product/07.png", "./se/07.ogg");	// 姫とうがらし藁綯い
-products[8]  = new Product("./img/product/08.png", "./se/08.ogg");	// 黒々炒り豆
-products[9]  = new Product("./img/product/09.png", "./se/09.ogg");	// FOODACTION美作
-products[10] = new Product("./img/product/10.png", "./se/10.ogg");	// 真庭ブランド
-products[11] = new Product("./img/product/11.png", "./se/11.ogg");	// 蒜山ジャージーヨーグルト
-products[12] = new Product("./img/product/12.png", "./se/12.ogg");	// 紅酢
-products[13] = new Product("./img/product/13.png", "./se/13.ogg");	// マグロの鉄太郎
-products[14] = new Product("./img/product/14.png", "./se/14.ogg");	// 蒟蒻名人 ゆばこん
-products[15] = new Product("./img/product/15.png", "./se/15.ogg");	// 倉敷ソーセージ
-products[16] = new Product("./img/product/16.png", "./se/16.ogg");	// どらせん作州黒餡
-products[17] = new Product("./img/product/17.png", "./se/17.ogg");	// 雄町米おかき
+products[1]  = new Product("./products/img/01.png", "./products/sound/01.ogg");	// 泡々酒ストライプ
+products[2]  = new Product("./products/img/02.png", "./products/sound/02.ogg");	// おかやま米野菜
+products[3]  = new Product("./products/img/03.png", "./products/sound/03.ogg");	// 津山ビール
+products[4]  = new Product("./products/img/04.png", "./products/sound/04.ogg");	// SOYPORK
+products[5]  = new Product("./products/img/05.png", "./products/sound/05.ogg");	// 醍醐桜ジャージー牛乳
+products[6]  = new Product("./products/img/06.png", "./products/sound/06.ogg");	// 踊る！たこ焼き器
+products[7]  = new Product("./products/img/07.png", "./products/sound/07.ogg");	// 姫とうがらし藁綯い
+products[8]  = new Product("./products/img/08.png", "./products/sound/08.ogg");	// 黒々炒り豆
+products[9]  = new Product("./products/img/09.png", "./products/sound/09.ogg");	// FOODACTION美作
+products[10] = new Product("./products/img/10.png", "./products/sound/10.ogg");	// 真庭ブランド
+products[11] = new Product("./products/img/11.png", "./products/sound/11.ogg");	// 蒜山ジャージーヨーグルト
+products[12] = new Product("./products/img/12.png", "./products/sound/12.ogg");	// 紅酢
+products[13] = new Product("./products/img/13.png", "./products/sound/13.ogg");	// マグロの鉄太郎
+products[14] = new Product("./products/img/14.png", "./products/sound/14.ogg");	// 蒟蒻名人 ゆばこん
+products[15] = new Product("./products/img/15.png", "./products/sound/15.ogg");	// 倉敷ソーセージ
+products[16] = new Product("./products/img/16.png", "./products/sound/16.ogg");	// どらせん作州黒餡
+products[17] = new Product("./products/img/17.png", "./products/sound/17.ogg");	// 雄町米おかき
 
 // キリ番音声
-var eventsound = new Audio("./se/event.ogg");
+var eventsound = new Audio("./products/sound/event.ogg");
 eventsound.load();
 
 // アニメーションフラグ
@@ -86,7 +86,7 @@ function getCountData()
 	$.ajax({
 		
 		dataType: "json",
-		url: "./count.json",
+		url: "./data/count.json",
 		cache: false, //キャッシュさせない
 		
 		success: function(data) {

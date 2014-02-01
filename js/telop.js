@@ -16,7 +16,7 @@ $(function () {
 	// テロップ文章の取得
 	$.ajax({
 		dataType: 'text',
-		url: "./telop.txt",
+		url: "./data/telop.txt",
 		success: function(data) {
 			$.each(data.split(/\r?\n/), function(i, str) {
 				if ( str == "" ) return;

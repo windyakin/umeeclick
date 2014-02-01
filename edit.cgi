@@ -42,7 +42,7 @@ sub main
 	print ' <link rel="stylesheet" href="/css/index.css">'."\n";
 	print '</head>'."\n";
 	print '<body>'."\n";
-	if ( open(SETTING, "+<", $mode->{'en'}.".txt") ) {
+	if ( open(SETTING, "+<", "./data/".$mode->{'en'}.".txt") ) {
 		binmode(SETTING);
 		print "<h1>".$mode->{'ja'}."設定ファイル編集</h1>"."\n";
 		print "<p>".$mode->{'ja'}."を編集します。</p>"."\n";

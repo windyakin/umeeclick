@@ -47,7 +47,7 @@ sub main
 	my $result = "0";
 	
 	# できる限りアクセスが集中しても大丈夫なようにしたい設計 …なんてなかった！
-	if ( open( CNT, "+< ./count.json" ) )
+	if ( open( CNT, "+< ./data/count.json" ) )
 	{
 		flock( CNT, 2 ); # 読み込みロック
 		$_ = <CNT>; # ファイルの1行目を取得(というか1行目にしか書かれてないし…)
@@ -110,7 +110,7 @@ sub judgeKiriban
 	my $count = shift;
 	
 	# ファイルを開く
-	if ( open ( KIRI, '<', './kiriban.txt') ) {
+	if ( open ( KIRI, '<', './data/kiriban.txt') ) {
 		# キリ番を読み込む
 		while ( <KIRI> ) {
 			chomp;
@@ -147,17 +147,17 @@ sub resetCounter
 	# バックアップを作成
 	{
 		# ディレクトリを作成
-		if ( !-d "./bak" ) { mkdir "./bak"; }
+		if ( !-d "./data/bak" ) { mkdir "./data/bak"; }
 		# 同じ名前のファイルが生まれると意味が無いので
 		my $i = 0;
 		my $name = time."_".$i.".json";
-		while ( !-e "./bak/".$name ) {
-			copy "count.json", "bak/".$name;
+		while ( !-e "./data/bak/".$name ) {
+			copy "count.json", "./data/bak/".$name;
 			$i++;
 		}
 	}
 	# ファイルに書き込む
-	if ( open( CNT, "> ./count.json" ) ) {
+	if ( open( CNT, "> ./data/count.json" ) ) {
 		seek( CNT, 0, 0 ); # 先頭
 		print CNT encode_json($JSON);
 		truncate( CNT, tell(CNT) ); # 削る(知らなかった…)
