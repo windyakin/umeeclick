@@ -166,3 +166,4 @@ pip-log.txt
 #origin
 *.sublime-project
 *.sublime-workspace
+bak/
