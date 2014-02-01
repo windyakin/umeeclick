@@ -61,11 +61,6 @@ var animationQueue = new Array();
 $(function () {
 	
 	{
-		$("#character").transition({opacity: 0}, 0);
-		$("#baloon").transition({opacity: 0}, 0);
-		$("#stamp").transition({opacity: 0}, 0);
-		
-		$("#start").transition({opacity: 0}, 0);
 	}
 	
 	// 読み込んだ画像のリサイズ・再配置
@@ -412,6 +407,15 @@ function animateKiriban(count, booth)
 //========================================================================================
 function printNowloading()
 {
+
+	// initialize
+	{
+		$("#character").transition({opacity: 0}, 0);
+		$("#baloon").transition({opacity: 0}, 0);
+		$("#stamp").transition({opacity: 0}, 0);
+		$("#start").transition({opacity: 0}, 0);
+	}
+
 	$("#start").delay(500).transition({opacity: 1}, 500);
 	
 	$("#start").click( function() {
@@ -462,9 +466,19 @@ function getCenter()
 	};
 }
 
+//========================================================================================
+//
+//	なんかずららら～って感じでカウント数を増やすやつ - printTotalCount
+//
+// -----------------------------------------------------------------------------
+//	param	$this		カウント表示場所
+//			now			現在の値
+//			total		表示する値
+//	return	なし
+//========================================================================================
 function printTotalCount( $this, now, total )
 {
-	now += Math.round(total/50);
+	now += Math.ceil(total/50);
 	if (now > total) { now = total; }
 	$this.text(now);
 	if ( now < total ) {

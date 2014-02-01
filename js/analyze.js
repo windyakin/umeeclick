@@ -21,7 +21,7 @@ var products = {};
 
 $(function() {
 	getCountData();
-	getProductList();
+	//getProductList();
 });
 
 function getProductList()
@@ -54,6 +54,7 @@ function getCountData()
 			count = data;
 		},
 		complete: function() {
+			console.dir(count);
 			printAnalysisResult();
 		}
 	});
@@ -61,6 +62,7 @@ function getCountData()
 
 function printAnalysisResult()
 {
+	//$("#total").text(count.total);
 	printTotalCount($("#total"), 0, count.total);
 	$.each(count.stat, function(booth, val) {
 		var rate = Math.round(val/count.total*10000)/100;
@@ -82,7 +84,7 @@ function printAnalysisResult()
 
 function printTotalCount( $this, now, total )
 {
-	now += Math.round(total/50);
+	now += Math.ceil(total/50);
 	if (now > total) { now = total; }
 	$this.text(now);
 	if ( now < total ) {
