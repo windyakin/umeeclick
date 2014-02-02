@@ -10,20 +10,13 @@
 var count = {};
 var indiv = new Array();
 var color = [ "#3498db", "#9b59b6", "#e67e22", "#e74c3c", "#95a5a6", "#1abc9c" ];
-// 商品のクラス
-var Product = function(num, name) {
-	var booth = ("0" + num).slice(-2); // ひどい
-	this.image    = "./products/img/"+booth+".png";
-	this.soundurl = "./products/sound/"+booth+".ogg";
-	this.sound    = new Audio(this.soundurl);
-	this.sound.load();
-	this.name     = name;
-};
 var products = {};
 
 $(function() {
-	getCountData();
-	getProductList();
+
+	getProductList()
+		.then(getCountData)
+		.then(printAnalysisResult);
 
 	{
 		$("#reset").click(function(){
@@ -42,24 +35,25 @@ $(function() {
 
 function getProductList()
 {
+	var d = new $.Deferred;
 	$.ajax({
 		dataType: "text",
 		url: "./data/products.txt",
 		cache: false,
 	})
 	.done(function(data) {
-		var product = data.split(/\r?\n/);
-		$.each( product, function(i, product) {
-			if ( product == "" ) return; // 末尾の空行は無視する(途中に入れられたらどうしようもないけど)
-			products[i+1] = new Product( i+1, product );
-		});
+		products = data.split(/\r?\n/);
+		products.unshift(null);
 	})
-	.always(function(){
+	.done(function(){
+		d.resolve();
 	});
+	return d.promise();
 }
 
 function getCountData()
 {
+	var d = new $.Deferred;
 	$.ajax({
 		dataType: "json",
 		url: "./data/count.json",
@@ -68,35 +62,37 @@ function getCountData()
 	.done(function(data) {
 		count = data;
 	})
-	.always(function() {
-		printAnalysisResult();
+	.done(function(){
+		d.resolve();
 	});
+	return d.promise();
 }
 
 function printAnalysisResult()
 {
 	//$("#total").text(count.total);
 	printTotalCount($("#total"), 0, count.total);
+	
 	$.each(count.stat, function(booth, val) {
 		var rate = Math.round(val/count.total*10000)/100;
-		indiv.push({ "booth": booth, "val": val, "rate": rate });
+		indiv.push({ "booth": booth, "val": val, "rate": rate, "name": products[booth] });
 	});
-	
 	indiv.sort(function(a, b) {
 		return ( a.val < b.val ? 1 : -1);
 	});
 
 	$.each(indiv, function(i, data) {
 		var width = data.rate/indiv[0].rate*100;
-		$("#totalbar tr").append('<td style="width:'+data.rate+'%;background-color:'+color[(i%color.length)]+'" id="total_'+(i+1)+'"></td>');
+		$("#totalbar tr").append('<td style="width:'+data.rate+'%;background-color:'+color[(i%color.length)]+'"></td>');
 		$("#totalbar").animate({"width": "100%"}, 1000);
 		$("#indiv").append(
 			'<tr class="indivs">'+
 				"<td>"+(i+1)+"</td>"+
 				"<td>"+data.booth+"</td>"+
+				"<td>"+data.name+"</td>"+
 				"<td>"+data.val+"</td>"+
 				"<td>"+data.rate+"%</td>"+
-				"<td><div id=\"rate_"+i+"\"style=\"width:0;background-color:"+color[(i%color.length)]+";height:20px;\"></div></td>"+
+				"<td><div id=\"rate_"+i+"\" style=\"width:0;background-color:"+color[(i%color.length)]+";height:20px;\"></div></td>"+
 			"</tr>"
 		);
 		$("#rate_"+i).delay(50*i).animate({"width":width+"%"}, 500, "easeOutBounce");
