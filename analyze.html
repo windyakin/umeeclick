@@ -21,13 +21,20 @@
 </header>
 
 <table id="indiv">
-	<tr><th>順位</th><th>番号</th><th>回数</th><th>割合</th><th style="width: 70%;">グラフ</th></tr>
+	<tr><th>順位</th><th>番号</th><th>名前</th><th>回数</th><th>割合</th><th style="width: 70%;">グラフ</th></tr>
 </table>
+<p>※1回もボタンが押されなかった製品は表示されません(仕様)</p>
 
 <h2>最後のキリ番</h2>
-<p>最後にキリ番をゲットしたのは</p>
+<table>
+	<tr><th>カウント値</th><td id="kiriban_count"></td></tr>
+	<tr><th>ブース番号</th><td id="kiriban_booth"></td></tr>
+	<tr><th>製　品　名</th><td id="kiriban_name"></td></tr>
+	<tr><th>時　　　間</th><td id="kiriban_time"></td></tr>
+</table>
 
 <h2>カウンターリセット</h2>
+<p>下のボタンをおすことでカウンターをリセットします。</p>
 <button id="reset">リセット</button>
 
 </body>

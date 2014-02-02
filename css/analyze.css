@@ -64,6 +64,15 @@ table#totalbar tr td {
 	height: 50px;
 }
 
+#indiv {
+	width: 100%;
+}
+
 #indiv td {
 	text-align: right;
+}
+
+#reset {
+	height: 2em;
+	color: red;
 }

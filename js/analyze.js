@@ -72,7 +72,7 @@ function printAnalysisResult()
 {
 	//$("#total").text(count.total);
 	printTotalCount($("#total"), 0, count.total);
-	
+
 	$.each(count.stat, function(booth, val) {
 		var rate = Math.round(val/count.total*10000)/100;
 		indiv.push({ "booth": booth, "val": val, "rate": rate, "name": products[booth] });
@@ -97,6 +97,12 @@ function printAnalysisResult()
 		);
 		$("#rate_"+i).delay(50*i).animate({"width":width+"%"}, 500, "easeOutBounce");
 	});
+
+	// キリ番
+	$("#kiriban_count").text(count.kiriban.count);
+	$("#kiriban_booth").text(count.kiriban.booth);
+	$("#kiriban_name").text(products[count.kiriban.booth]);
+	$("#kiriban_time").text(toLocaleString(new Date(count.kiriban.time * 1000)));
 }
 
 function printTotalCount( $this, now, total )
@@ -108,6 +114,12 @@ function printTotalCount( $this, now, total )
 		setTimeout(function(){printTotalCount($this, now, total)}, 10); 
 	}
 	return;
+}
+
+
+function toLocaleString( date )
+{
+    return [ date.getFullYear(), date.getMonth() + 1, date.getDate() ].join( '/' ) + ' ' + date.toLocaleTimeString();
 }
 
 })();
