@@ -16,7 +16,7 @@ var Product = function(num, name) {
 	this.image    = "./products/img/"+booth+".png";
 	this.soundurl = "./products/sound/"+booth+".ogg";
 	this.sound    = new Audio(this.soundurl);
-	this.sound.load();
+	//this.sound.load();
 	this.name     = name;
 };
 
@@ -375,6 +375,7 @@ function animateKiriban(count, booth)
 	$("#aspect")
 		// カウンター非表示
 		.queue( function() {
+			flickerBackground();
 			$("#countbox").transition({opacity: 0}, 500, 'ease');
 			$("#scrollbox").transition({opacity: 0}, 500, 'ease');
 			$(this).dequeue();
@@ -508,6 +509,31 @@ function printTotalCount( $this, now, total )
 		setTimeout(function(){printTotalCount($this, now, total)}, 10); 
 	}
 	return;
+}
+
+//========================================================================================
+//
+//	このあと滅茶苦茶点滅した - flickerBackground
+//
+// -----------------------------------------------------------------------------
+//	param	なし
+//	return	なし
+//========================================================================================
+function flickerBackground(){
+	// チカチカ
+	if ( $("#aspect").hasClass("flick") ) {
+		$("#aspect").removeClass("flick");
+	}
+	else {
+		$("#aspect").addClass("flick");
+	}
+	// 自分自身を呼び出す
+	if ( aFlag != 0 ) {
+		setTimeout(function(){flickerBackground()}, 250)
+	}
+	else {
+		$("#aspect").removeClass("flick");
+	}
 }
 
 //========================================================================================
