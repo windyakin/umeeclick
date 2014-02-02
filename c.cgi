@@ -152,7 +152,7 @@ sub resetCounter
 		my $i = 0;
 		my $name = time."_".$i.".json";
 		while ( !-e "./data/bak/".$name ) {
-			copy "count.json", "./data/bak/".$name;
+			copy "./data/count.json", "./data/bak/".$name;
 			$i++;
 		}
 	}
