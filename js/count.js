@@ -12,7 +12,7 @@
 
 // 商品のクラス
 var Product = function(num, name) {
-	var booth = ("0" + num).slice(-2); // ひどい
+	var booth     = ("0" + num).slice(-2); // ひどい
 	this.image    = "./products/img/"+booth+".png";
 	this.soundurl = "./products/sound/"+booth+".ogg";
 	this.sound    = new Audio(this.soundurl);
@@ -123,7 +123,7 @@ function getCountData()
 		url: "./data/count.json",
 		cache: false, //キャッシュさせない
 	})
-	.success(function(data){
+	.done(function(data){
 		// 初回起動時はとにかく現在のカウント値を取得
 		if ( now.total == -1 ) {
 			now = data;
@@ -161,7 +161,7 @@ function getProductList()
 		url: "./data/products.txt",
 		cache: false,
 	})
-	.success(function(data) {
+	.done(function(data) {
 		var product = data.split(/\r?\n/);
 		$.each( product, function(i, product) {
 			// 末尾の空行は無視する(途中に入れられたらどうしようもないけど)
@@ -170,7 +170,7 @@ function getProductList()
 			products[i+1] = new Product( i+1, product );
 		});
 	})
-	.complete(function(){
+	.always(function(){
 		$.each(products, function (id, p) {
 			$("<button>").text(id).appendTo("#toolbar");
 		});

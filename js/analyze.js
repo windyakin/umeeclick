@@ -32,7 +32,7 @@ $(function() {
 					dataType: "text",
 					url: "./c.cgi?r"
 				})
-				.success(function(data){
+				.done(function(data){
 					$("#reset").text("リセットしました").attr("disabled", "disabled");
 				});
 			}
@@ -47,14 +47,14 @@ function getProductList()
 		url: "./data/products.txt",
 		cache: false,
 	})
-	.success(function(data) {
+	.done(function(data) {
 		var product = data.split(/\r?\n/);
 		$.each( product, function(i, product) {
 			if ( product == "" ) return; // 末尾の空行は無視する(途中に入れられたらどうしようもないけど)
 			products[i+1] = new Product( i+1, product );
 		});
 	})
-	.complete(function(){
+	.always(function(){
 	});
 }
 
@@ -65,10 +65,10 @@ function getCountData()
 		url: "./data/count.json",
 		cache: false, //キャッシュさせない
 	})
-	.success(function(data) {
+	.done(function(data) {
 		count = data;
 	})
-	.complete(function() {
+	.always(function() {
 		printAnalysisResult();
 	});
 }

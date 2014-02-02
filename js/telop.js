@@ -18,13 +18,13 @@ $(function () {
 		dataType: 'text',
 		url: "./data/telop.txt",
 	})
-	.success(function(data) {
+	.done(function(data) {
 		$.each(data.split(/\r?\n/), function(i, str) {
 			if ( str == "" ) return;
 			telop.push(str);
 		});
 	})
-	.complete(function() {
+	.always(function() {
 		printTelopLoop(0);
 	});
 });
