@@ -68,7 +68,7 @@ function initialized()
 		$("#start").transition({opacity: 0}, 0);
 	}
 	keepRatio(); // raito.js
-	printToolbar(); // debug
+	//printToolbar(); // debug
 	printNowloading();
 
 }
@@ -89,7 +89,7 @@ function printNowloading()
 	$("#start").click( function() {
 		$("#loading").hide();
 		checkAnimationQueue();
-		//enterFullscreen();
+		enterFullscreen();
 	});
 	
 	// フルスクリーン化用関数
